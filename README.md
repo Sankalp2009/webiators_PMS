@@ -221,7 +221,6 @@ Authorization: Bearer <jwt_token>
 - `name` - User full name
 - `email` - Unique email address
 - `password` - Hashed password
-- `role` - User role (user/admin)
 - `createdAt` - Account creation date
 - `updatedAt` - Last update date
 
@@ -233,8 +232,6 @@ Authorization: Bearer <jwt_token>
 - `price` - Product price
 - `category` - Product category
 - `images` - Array of image URLs
-- `stock` - Available quantity
-- `owner` - User who created the product
 - `createdAt` - Creation date
 - `updatedAt` - Last update date
 
@@ -349,7 +346,6 @@ For detailed information on specific features:
 
 - [Backend API Documentation](./server/README.md)
 - [Frontend Details](./client/README.md)
-- [CKEditor Integration](./server/CKEDITOR_INTEGRATION.md)
 
 ## 🤝 Contributing
 
@@ -357,10 +353,6 @@ For detailed information on specific features:
 2. Commit changes (`git commit -m 'Add YourFeature'`)
 3. Push to branch (`git push origin feature/YourFeature`)
 4. Open a Pull Request
-
-## 📄 License
-
-ISC
 
 ## 👤 Author
 
