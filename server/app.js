@@ -20,13 +20,13 @@ app.use(compression());
 app.use(
   cors({
     origin:
-      process.env.NODE_ENV === "development"
-        ? "https://webiators-pms.vercel.app/"
+      process.env.NODE_ENV === "production"
+        ? "https://webiators-pms.vercel.app"
         : "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
     optionsSuccessStatus: 200,
-  })
+  }),
 );
 
 // ✅ Parsing middleware
@@ -38,25 +38,23 @@ app.use(cookieParser());
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
-  })
+  }),
 );
 app.use(hpp());
 
-
 // Logging
-if(process.env.NODE_ENV === 'production') {
-  app.use(morgan('combined'));
+if (process.env.NODE_ENV === "production") {
+  app.use(morgan("combined"));
 } else {
-  app.use(morgan('dev'));
+  app.use(morgan("dev"));
 }
 
-
 app.get("/health", (req, res) => {
-  res.json({ 
-    status: "ok", 
+  res.json({
+    status: "ok",
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || "development",
   });
 });
 
@@ -74,7 +72,6 @@ app.use((req, res) => {
     message: "Route not found",
   });
 });
-
 
 app.use((err, req, res, next) => {
   console.error("Error:", err);
