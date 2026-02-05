@@ -3,9 +3,14 @@ import { GlobalInfo } from "../Context/GlobalInfo.jsx";
 import { Navigate } from "react-router";
 
 function PrivateRoute({ children }) {
-  const { isAuth } = useContext(GlobalInfo);
+  const { isAuth, token } = useContext(GlobalInfo);
 
-  if (!isAuth) return <Navigate to="/login" replace={true} />;
+  // Check both isAuth state and token from localStorage for secure verification
+  const isAuthenticated = isAuth || !!localStorage.getItem("token");
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace={true} />;
+  }
 
   return children;
 }

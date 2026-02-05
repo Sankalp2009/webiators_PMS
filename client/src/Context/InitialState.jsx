@@ -1,5 +1,5 @@
 export const InitialState = {
-  user:null,
+  user: null,
   isAuth: false,
-  Token:null
-}
+  token: null,
+};

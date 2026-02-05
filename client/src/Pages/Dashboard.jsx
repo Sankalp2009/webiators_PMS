@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router';
+import React, { useState } from "react";
+import { useNavigate } from "react-router";
 import {
   Box,
   AppBar,
@@ -26,37 +26,31 @@ import {
   Grid,
   Avatar,
   CircularProgress,
-} from '@mui/material';
-import AdminSidebar from '../Components/layout/AdminSidebar.jsx';
-import ProductForm from '../Components/products/ProductForm.jsx';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import MenuIcon from '@mui/icons-material/Menu';
-import SecurityIcon from '@mui/icons-material/Security';
-import { toast } from 'react-toastify';
-import { GlobalInfo } from '../Context/GlobalInfo.jsx';
-import { useProducts } from '../Context/ProductContext';
+} from "@mui/material";
+import AdminSidebar from "../Components/layout/AdminSidebar.jsx";
+import ProductForm from "../Components/products/ProductForm.jsx";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import MenuIcon from "@mui/icons-material/Menu";
+import SecurityIcon from "@mui/icons-material/Security";
+import { toast } from "react-toastify";
+import { GlobalInfo } from "../Context/GlobalInfo.jsx";
+import { useProducts } from "../Context/ProductContext";
 
 const DRAWER_WIDTH = 280;
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { isAuth } = useContext(GlobalInfo);
+
   const { products, loading, deleteProduct } = useProducts();
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(undefined);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => {
-    if (!isAuth) {
-      navigate('/login');
-    }
-  }, [isAuth, navigate]);
 
   const handleEdit = (product) => {
     // Transform product data from API format to form format
@@ -65,7 +59,7 @@ const Dashboard = () => {
       metaTitle: product.metaTitle,
       name: product.productName,
       slug: product.slug,
-      images: product.galleryImages?.map(img => img.url) || [],
+      images: product.galleryImages?.map((img) => img.url) || [],
       price: product.price,
       discountedPrice: product.discountedPrice,
       description: product.description,
@@ -80,9 +74,9 @@ const Dashboard = () => {
     try {
       await deleteProduct(id);
       setDeleteConfirmId(null);
-      toast.success('Product deleted successfully');
+      toast.success("Product deleted successfully");
     } catch (error) {
-      toast.error('Failed to delete product',error);
+      toast.error("Failed to delete product", error);
     }
   };
 
@@ -91,21 +85,17 @@ const Dashboard = () => {
     setEditingProduct(undefined);
   };
 
-  if (!isAuth) {
-    return null;
-  }
-
   const stats = [
     {
-      label: 'Total Products',
+      label: "Total Products",
       value: products.length,
-      color: 'primary.main',
-      bgColor: 'primary.light',
+      color: "primary.main",
+      bgColor: "primary.light",
     },
   ];
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
       {/* Sidebar */}
       <Box
         component="nav"
@@ -117,8 +107,8 @@ const Dashboard = () => {
           onClose={() => setMobileOpen(false)}
           ModalProps={{ keepMounted: true }}
           sx={{
-            display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { width: DRAWER_WIDTH },
+            display: { xs: "block", md: "none" },
+            "& .MuiDrawer-paper": { width: DRAWER_WIDTH },
           }}
         >
           <AdminSidebar />
@@ -126,8 +116,8 @@ const Dashboard = () => {
         <Drawer
           variant="permanent"
           sx={{
-            display: { xs: 'none', md: 'block' },
-            '& .MuiDrawer-paper': { width: DRAWER_WIDTH },
+            display: { xs: "none", md: "block" },
+            "& .MuiDrawer-paper": { width: DRAWER_WIDTH },
           }}
           open
         >
@@ -136,15 +126,15 @@ const Dashboard = () => {
       </Box>
 
       {/* Main Content */}
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
         {/* Header */}
         <AppBar
           position="sticky"
           elevation={0}
           sx={{
-            bgcolor: 'background.paper',
+            bgcolor: "background.paper",
             borderBottom: 1,
-            borderColor: 'divider',
+            borderColor: "divider",
           }}
         >
           <Toolbar>
@@ -152,7 +142,7 @@ const Dashboard = () => {
               color="inherit"
               edge="start"
               onClick={() => setMobileOpen(true)}
-              sx={{ mr: 2, display: { md: 'none' } }}
+              sx={{ mr: 2, display: { md: "none" } }}
             >
               <MenuIcon />
             </IconButton>
@@ -175,7 +165,7 @@ const Dashboard = () => {
         </AppBar>
 
         {/* Content */}
-        <Box sx={{ p: 3, flex: 1, bgcolor: 'background.default' }}>
+        <Box sx={{ p: 3, flex: 1, bgcolor: "background.default" }}>
           {/* Stats */}
           <Typography variant="h6" fontWeight={600} gutterBottom>
             Overview
@@ -184,7 +174,9 @@ const Dashboard = () => {
             {stats.map((stat, index) => (
               <Grid item xs={12} sm={4} key={index}>
                 <Card>
-                  <CardContent sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <CardContent
+                    sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                  >
                     <Avatar
                       sx={{
                         bgcolor: stat.bgColor,
@@ -213,9 +205,9 @@ const Dashboard = () => {
           <Typography variant="h6" fontWeight={600} gutterBottom>
             Product Management
           </Typography>
-          
+
           {loading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+            <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
               <CircularProgress />
             </Box>
           ) : (
@@ -225,13 +217,15 @@ const Dashboard = () => {
                   <TableRow>
                     <TableCell width={80}>Image</TableCell>
                     <TableCell>Product</TableCell>
-                    <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
+                    <TableCell
+                      sx={{ display: { xs: "none", md: "table-cell" } }}
+                    >
                       Category
                     </TableCell>
                     <TableCell align="right">Price</TableCell>
                     <TableCell
                       align="center"
-                      sx={{ display: { xs: 'none', sm: 'table-cell' } }}
+                      sx={{ display: { xs: "none", sm: "table-cell" } }}
                     >
                       Stock
                     </TableCell>
@@ -244,7 +238,7 @@ const Dashboard = () => {
                       key={product._id}
                       hover
                       sx={{
-                        '&:hover .action-buttons': { opacity: 1 },
+                        "&:hover .action-buttons": { opacity: 1 },
                       }}
                     >
                       <TableCell>
@@ -263,19 +257,25 @@ const Dashboard = () => {
                           /{product.slug}
                         </Typography>
                       </TableCell>
-                      <TableCell sx={{ display: { xs: 'none', md: 'table-cell' } }}>
+                      <TableCell
+                        sx={{ display: { xs: "none", md: "table-cell" } }}
+                      >
                         <Chip label={product.category} size="small" />
                       </TableCell>
                       <TableCell align="right">
                         {product.discountedPrice ? (
                           <Box>
-                            <Typography variant="body2" fontWeight={600} color="warning.main">
+                            <Typography
+                              variant="body2"
+                              fontWeight={600}
+                              color="warning.main"
+                            >
                               ${product.discountedPrice.toFixed(2)}
                             </Typography>
                             <Typography
                               variant="caption"
                               color="text.secondary"
-                              sx={{ textDecoration: 'line-through' }}
+                              sx={{ textDecoration: "line-through" }}
                             >
                               ${product.price.toFixed(2)}
                             </Typography>
@@ -286,11 +286,14 @@ const Dashboard = () => {
                           </Typography>
                         )}
                       </TableCell>
-                      <TableCell align="center" sx={{ display: { xs: 'none', sm: 'table-cell' } }}>
+                      <TableCell
+                        align="center"
+                        sx={{ display: { xs: "none", sm: "table-cell" } }}
+                      >
                         <Chip
                           label={product.stock}
                           size="small"
-                          color={product.stock > 0 ? 'success' : 'error'}
+                          color={product.stock > 0 ? "success" : "error"}
                         />
                       </TableCell>
                       <TableCell align="right">
@@ -298,9 +301,9 @@ const Dashboard = () => {
                           className="action-buttons"
                           sx={{
                             opacity: { xs: 1, md: 0 },
-                            transition: 'opacity 0.2s',
-                            display: 'flex',
-                            justifyContent: 'flex-end',
+                            transition: "opacity 0.2s",
+                            display: "flex",
+                            justifyContent: "flex-end",
                             gap: 0.5,
                           }}
                         >
@@ -310,7 +313,10 @@ const Dashboard = () => {
                           >
                             <VisibilityIcon fontSize="small" />
                           </IconButton>
-                          <IconButton size="small" onClick={() => handleEdit(product)}>
+                          <IconButton
+                            size="small"
+                            onClick={() => handleEdit(product)}
+                          >
                             <EditIcon fontSize="small" />
                           </IconButton>
                           <IconButton
@@ -326,11 +332,16 @@ const Dashboard = () => {
                   ))}
                   {products.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={6} sx={{ textAlign: 'center', py: 6 }}>
+                      <TableCell
+                        colSpan={6}
+                        sx={{ textAlign: "center", py: 6 }}
+                      >
                         <InventoryIcon
-                          sx={{ fontSize: 48, color: 'text.disabled', mb: 2 }}
+                          sx={{ fontSize: 48, color: "text.disabled", mb: 2 }}
                         />
-                        <Typography color="text.secondary">No products yet</Typography>
+                        <Typography color="text.secondary">
+                          No products yet
+                        </Typography>
                         <Button
                           onClick={() => setIsFormOpen(true)}
                           sx={{ mt: 1 }}
@@ -353,10 +364,10 @@ const Dashboard = () => {
         onClose={handleFormClose}
         maxWidth="md"
         fullWidth
-        PaperProps={{ sx: { maxHeight: '90vh' } }}
+        PaperProps={{ sx: { maxHeight: "90vh" } }}
       >
         <DialogTitle>
-          {editingProduct ? 'Edit Product' : 'Add New Product'}
+          {editingProduct ? "Edit Product" : "Add New Product"}
         </DialogTitle>
         <DialogContent dividers>
           <ProductForm product={editingProduct} onClose={handleFormClose} />
@@ -364,14 +375,12 @@ const Dashboard = () => {
       </Dialog>
 
       {/* Delete Confirmation */}
-      <Dialog
-        open={!!deleteConfirmId}
-        onClose={() => setDeleteConfirmId(null)}
-      >
+      <Dialog open={!!deleteConfirmId} onClose={() => setDeleteConfirmId(null)}>
         <DialogTitle>Delete Product</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this product? This action cannot be undone.
+            Are you sure you want to delete this product? This action cannot be
+            undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>

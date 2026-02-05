@@ -1,4 +1,4 @@
- import React, { useState, useEffect, useContext } from 'react';
+ import React, { useState, useContext } from 'react';
  import { Link, useNavigate } from 'react-router';
  import {
    Box,
@@ -19,15 +19,11 @@
  
  const Register = () => {
    const navigate = useNavigate();
-    const { signup, isAuth } = useContext(GlobalInfo);
+    const { signup } = useContext(GlobalInfo);
    const [formData, setFormData] = useState({ username: '', email: '', password: '' });
    const [isLoading, setIsLoading] = useState(false);
  
-    useEffect(() => {
-     if (isAuth) {
-       navigate('/dashboard');
-     }
-   }, [isAuth, navigate]);
+    
  
    const handleSubmit = async (e) => {
   e.preventDefault();

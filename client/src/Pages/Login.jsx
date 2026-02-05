@@ -18,7 +18,7 @@ import { GlobalInfo } from "../Context/GlobalInfo.jsx";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login, isAuth } = useContext(GlobalInfo);
+  const { login } = useContext(GlobalInfo);
 
   const [formData, setFormData] = useState({
     email: "",
