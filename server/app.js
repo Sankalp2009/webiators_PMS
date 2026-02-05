@@ -20,9 +20,7 @@ app.use(cors());
 
 app.use(
   cors({
-    origin:
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:5173" : "https://webiators-pms.vercel.app",
+    origin:"https://webiators-pms.vercel.app",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
