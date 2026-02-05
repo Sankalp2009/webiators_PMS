@@ -1,6 +1,9 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 
+// Set NODE_ENV to test before loading config
+process.env.NODE_ENV = "test";
+
 dotenv.config({ path: "./config.env" });
 
 // Test database connection

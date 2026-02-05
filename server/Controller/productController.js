@@ -1,4 +1,5 @@
 import Product from "../Model/productModel.js";
+import { processRichText } from "../Utils/sanitizer.js";
 
 export const getAllProduct = async (req, res) => {
   try {
@@ -69,6 +70,25 @@ export const createProduct = async (req, res) => {
       products = [products];
     }
 
+    // Sanitize descriptions in all products
+    products = products.map((product) => {
+      if (product.description) {
+        const { content, isValid, errors } = processRichText(
+          product.description,
+        );
+
+        if (!isValid) {
+          throw new Error(`Invalid description: ${errors.join(", ")}`);
+        }
+
+        return {
+          ...product,
+          description: content,
+        };
+      }
+      return product;
+    });
+
     if (products.length > 1) {
       const slugs = products.map((p) => p.slug.toLowerCase().trim());
       const uniqueSlugs = new Set(slugs);
@@ -126,6 +146,14 @@ export const createProduct = async (req, res) => {
       });
     }
 
+    // Handle rich text processing errors
+    if (error.message.includes("Invalid description")) {
+      return res.status(400).json({
+        status: "fail",
+        message: error.message,
+      });
+    }
+
     return res.status(500).json({
       status: "error",
       message: "Failed to create product(s)",
@@ -136,7 +164,27 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const updateData = req.body;
+    let updateData = req.body;
+
+    // Sanitize description if present
+    if (updateData.description) {
+      const { content, isValid, errors } = processRichText(
+        updateData.description,
+      );
+
+      if (!isValid) {
+        return res.status(400).json({
+          status: "fail",
+          message: "Invalid description",
+          errors,
+        });
+      }
+
+      updateData = {
+        ...updateData,
+        description: content,
+      };
+    }
 
     const existingProduct = await Product.findById(id)
       .select("createdBy")
@@ -149,8 +197,10 @@ export const updateProduct = async (req, res) => {
       });
     }
 
-
-     if (req.user && existingProduct.createdBy.toString() !== req.user.id.toString()) {
+    if (
+      req.user &&
+      existingProduct.createdBy.toString() !== req.user.id.toString()
+    ) {
       return res.status(403).json({
         status: "fail",
         message: "You are not authorized to update this product",
@@ -172,13 +222,14 @@ export const updateProduct = async (req, res) => {
     }
 
     const updated = await Product.findByIdAndUpdate(
-      id, 
-      { $set: updateData }, 
+      id,
+      { $set: updateData },
       {
-      new: true,
-      runValidators: true,
-      lean: true,
-    }).exec();
+        new: true,
+        runValidators: true,
+        lean: true,
+      },
+    ).exec();
 
     return res.status(200).json({
       status: "success",
@@ -197,16 +248,17 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    
-    const product = await Product.findById(id).select("createdBy productName").lean();
-    
+
+    const product = await Product.findById(id)
+      .select("createdBy productName")
+      .lean();
+
     if (!product) {
       return res.status(404).json({
         status: "fail",
         message: "Product not found",
       });
     }
-
 
     if (req.user && product.createdBy.toString() !== req.user.id.toString()) {
       return res.status(403).json({

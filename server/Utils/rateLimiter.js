@@ -1,6 +1,10 @@
-import { rateLimit } from 'express-rate-limit';
+import { rateLimit } from "express-rate-limit";
+
+// Skip rate limiting in test environment
+const skipInTest = (req, res) => process.env.NODE_ENV === "test";
 
 export const generalLimiter = rateLimit({
+  skip: skipInTest,
   windowMs: 15 * 60 * 1000, // 15 min
   limit: 100,
   message: {
@@ -12,6 +16,7 @@ export const generalLimiter = rateLimit({
 });
 
 export const strictLimiter = rateLimit({
+  skip: skipInTest,
   windowMs: 15 * 60 * 1000, // 15 min
   limit: 10,
   message: {
