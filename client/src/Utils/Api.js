@@ -9,7 +9,7 @@ const api = axios.create({
     'Authorization': `Bearer ${token}`,
     "Content-Type": "application/json",
   },
-  withCredentials: true,
+  withCredentials: false,
 });
 
 // Add token to requests
