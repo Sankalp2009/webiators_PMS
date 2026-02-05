@@ -1,36 +1,36 @@
 import Product from "../Model/productModel.js";
-import { processRichText } from "../Utils/sanitizer.js";
+import { processRichText } from "../Utils/sanitize.js";
 
+// Get all products
 export const getAllProduct = async (req, res) => {
   try {
-    const products = await Product.find().lean();
+    const products = await Product.find()
+      .sort({ createdAt: -1 })
+      .populate("createdBy", "username email");
 
     return res.status(200).json({
       status: "success",
-      result: products.length,
-      message:
-        products.length > 0
-          ? "Products retrieved successfully"
-          : "No products found",
-      data: products,
+      results: products.length,
+      products,
     });
-  } catch (err) {
-    console.error("getAllProduct error:", err);
+  } catch (error) {
+    console.error("getAllProduct error:", error);
     return res.status(500).json({
       status: "error",
-      message: "Failed to retrieve products",
+      message: "Failed to fetch products",
     });
   }
 };
 
+// Get product by ID
 export const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const product = await Product.findById(id)
-      .populate("createdBy", "username email")
-      .lean()
-      .exec();
+    const product = await Product.findById(id).populate(
+      "createdBy",
+      "username email",
+    );
 
     if (!product) {
       return res.status(404).json({
@@ -41,26 +41,18 @@ export const getProductById = async (req, res) => {
 
     return res.status(200).json({
       status: "success",
-      message: "Product retrieved successfully",
-      data: product,
+      product,
     });
   } catch (error) {
     console.error("getProductById error:", error);
-
-    if (error.name === "CastError") {
-      return res.status(400).json({
-        status: "fail",
-        message: "Invalid product ID format",
-      });
-    }
-
     return res.status(500).json({
       status: "error",
-      message: "Failed to retrieve product",
+      message: "Failed to fetch product",
     });
   }
 };
 
+// Create product(s) - supports both single and bulk
 export const createProduct = async (req, res) => {
   try {
     let products = req.body;
@@ -70,25 +62,41 @@ export const createProduct = async (req, res) => {
       products = [products];
     }
 
+    // Add createdBy to all products from authenticated user
+    const userId = req.user._id || req.user.id;
+    
+    products = products.map((product) => ({
+      ...product,
+      createdBy: userId,
+    }));
+
     // Sanitize descriptions in all products
     products = products.map((product) => {
       if (product.description) {
-        const { content, isValid, errors } = processRichText(
-          product.description,
-        );
+        // If you have a processRichText function, use it
+        // Otherwise, just use the description as-is
+        try {
+          const { content, isValid, errors } = processRichText(
+            product.description,
+          );
 
-        if (!isValid) {
-          throw new Error(`Invalid description: ${errors.join(", ")}`);
+          if (!isValid) {
+            throw new Error(`Invalid description: ${errors.join(", ")}`);
+          }
+
+          return {
+            ...product,
+            description: content,
+          };
+        } catch (err) {
+          // If processRichText doesn't exist, just use the description
+          return product;
         }
-
-        return {
-          ...product,
-          description: content,
-        };
       }
       return product;
     });
 
+    // Check for duplicate slugs in the request
     if (products.length > 1) {
       const slugs = products.map((p) => p.slug.toLowerCase().trim());
       const uniqueSlugs = new Set(slugs);
@@ -101,6 +109,7 @@ export const createProduct = async (req, res) => {
       }
     }
 
+    // Check if slugs already exist in database
     const slugsToCheck = products.map((p) => p.slug.toLowerCase().trim());
     const existingSlugs = await Product.find({
       slug: { $in: slugsToCheck },
@@ -161,97 +170,33 @@ export const createProduct = async (req, res) => {
   }
 };
 
+// Update product
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    let updateData = req.body;
+    const updates = req.body;
 
     // Sanitize description if present
-    if (updateData.description) {
-      const { content, isValid, errors } = processRichText(
-        updateData.description,
-      );
+    if (updates.description) {
+      try {
+        const { content, isValid, errors } = processRichText(
+          updates.description,
+        );
 
-      if (!isValid) {
-        return res.status(400).json({
-          status: "fail",
-          message: "Invalid description",
-          errors,
-        });
-      }
+        if (!isValid) {
+          return res.status(400).json({
+            status: "fail",
+            message: `Invalid description: ${errors.join(", ")}`,
+          });
+        }
 
-      updateData = {
-        ...updateData,
-        description: content,
-      };
-    }
-
-    const existingProduct = await Product.findById(id)
-      .select("createdBy")
-      .lean();
-
-    if (!existingProduct) {
-      return res.status(404).json({
-        status: "fail",
-        message: "Product not found",
-      });
-    }
-
-    if (
-      req.user &&
-      existingProduct.createdBy.toString() !== req.user.id.toString()
-    ) {
-      return res.status(403).json({
-        status: "fail",
-        message: "You are not authorized to update this product",
-      });
-    }
-
-    if (updateData.slug) {
-      const duplicate = await Product.findOne({
-        slug: updateData.slug.toLowerCase().trim(),
-        _id: { $ne: id },
-      }).lean();
-
-      if (duplicate) {
-        return res.status(400).json({
-          status: "fail",
-          message: "A product with this slug already exists",
-        });
+        updates.description = content;
+      } catch (err) {
+        // If processRichText doesn't exist, just use the description
       }
     }
 
-    const updated = await Product.findByIdAndUpdate(
-      id,
-      { $set: updateData },
-      {
-        new: true,
-        runValidators: true,
-        lean: true,
-      },
-    ).exec();
-
-    return res.status(200).json({
-      status: "success",
-      message: "Product updated successfully",
-      data: updated,
-    });
-  } catch (error) {
-    console.error("updateProduct error:", error);
-    return res.status(500).json({
-      status: "error",
-      message: "Failed to update product",
-    });
-  }
-};
-
-export const deleteProduct = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const product = await Product.findById(id)
-      .select("createdBy productName")
-      .lean();
+    const product = await Product.findById(id);
 
     if (!product) {
       return res.status(404).json({
@@ -260,19 +205,94 @@ export const deleteProduct = async (req, res) => {
       });
     }
 
-    if (req.user && product.createdBy.toString() !== req.user.id.toString()) {
+    // Check if user owns the product
+    const userId = req.user._id || req.user.id;
+    if (product.createdBy.toString() !== userId.toString()) {
       return res.status(403).json({
         status: "fail",
-        message: "You are not authorized to delete this product",
+        message: "You don't have permission to update this product",
       });
     }
 
-    await Product.findByIdAndDelete(id).lean().exec();
+    // Check if slug is being changed and if it already exists
+    if (updates.slug && updates.slug !== product.slug) {
+      const existingProduct = await Product.findOne({
+        slug: updates.slug,
+        _id: { $ne: id },
+      });
+
+      if (existingProduct) {
+        return res.status(400).json({
+          status: "fail",
+          message: "A product with this slug already exists",
+        });
+      }
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(id, updates, {
+      new: true,
+      runValidators: true,
+    }).populate("createdBy", "username email");
+
+    return res.status(200).json({
+      status: "success",
+      message: "Product updated successfully",
+      product: updatedProduct,
+    });
+  } catch (error) {
+    console.error("updateProduct error:", error);
+
+    if (error.code === 11000) {
+      return res.status(400).json({
+        status: "fail",
+        message: "A product with this slug already exists",
+      });
+    }
+
+    if (error.name === "ValidationError") {
+      const errors = Object.values(error.errors).map((err) => err.message);
+      return res.status(400).json({
+        status: "fail",
+        message: "Validation failed",
+        errors,
+      });
+    }
+
+    return res.status(500).json({
+      status: "error",
+      message: "Failed to update product",
+    });
+  }
+};
+
+// Delete product
+export const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({
+        status: "fail",
+        message: "Product not found",
+      });
+    }
+
+    // Check if user owns the product
+    const userId = req.user._id || req.user.id;
+    if (product.createdBy.toString() !== userId.toString()) {
+      return res.status(403).json({
+        status: "fail",
+        message: "You don't have permission to delete this product",
+      });
+    }
+
+    await Product.findByIdAndDelete(id);
 
     return res.status(200).json({
       status: "success",
       message: "Product deleted successfully",
-      data: { _id: product._id, productName: product.productName },
     });
   } catch (error) {
     console.error("deleteProduct error:", error);

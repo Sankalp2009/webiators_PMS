@@ -1,11 +1,5 @@
 import DOMPurify from "isomorphic-dompurify";
 
-/**
- * Sanitizes HTML content from CKEditor to prevent XSS attacks
- * Allows safe HTML tags and attributes commonly used in rich text editors
- * @param {string} dirtyHTML - The unsanitized HTML content
- * @returns {string} - Clean, safe HTML content
- */
 export const sanitizeRichText = (dirtyHTML) => {
   if (!dirtyHTML || typeof dirtyHTML !== "string") {
     return "";
@@ -65,14 +59,7 @@ export const sanitizeRichText = (dirtyHTML) => {
   return DOMPurify.sanitize(dirtyHTML, config);
 };
 
-/**
- * Validates rich text content
- * @param {string} content - The HTML content to validate
- * @param {Object} options - Validation options
- * @param {number} options.minLength - Minimum length (default: 10)
- * @param {number} options.maxLength - Maximum length (default: 5000)
- * @returns {Object} - { isValid: boolean, errors: string[] }
- */
+
 export const validateRichText = (
   content,
   options = { minLength: 10, maxLength: 5000 },
@@ -102,11 +89,6 @@ export const validateRichText = (
   };
 };
 
-/**
- * Processes rich text for storage - sanitizes and validates
- * @param {string} dirtyText - Raw HTML from CKEditor
- * @returns {Object} - { content: string, isValid: boolean, errors: string[] }
- */
 export const processRichText = (dirtyText) => {
   // Validate first
   const validation = validateRichText(dirtyText);
