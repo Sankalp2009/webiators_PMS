@@ -10,19 +10,13 @@ import userRoutes from "./Routes/userRoutes.js";
 import { generalLimiter, strictLimiter } from "./Utils/rateLimiter.js";
 const app = express();
 
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
+
 // Security middleware
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
-    },
-  },
-  crossOriginEmbedderPolicy: false,
+  contentSecurityPolicy: false
 }));
+
 
 // Prevent HTTP Parameter Pollution
 app.use(hpp());
