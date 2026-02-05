@@ -16,6 +16,7 @@ import {
   ListItemText,
   CircularProgress,
 } from "@mui/material";
+import ImageGallery from "../Components/products/ImageGallery.jsx";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -23,7 +24,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import { useProducts } from "../Context/ProductContext";
-import ImageGallery from "../Components/products/ImageGallery.jsx";
+
 
 const ProductDetail = () => {
   const { slug } = useParams();

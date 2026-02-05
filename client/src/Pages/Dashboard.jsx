@@ -27,6 +27,8 @@ import {
   Avatar,
   CircularProgress,
 } from '@mui/material';
+import AdminSidebar from '../Components/layout/AdminSidebar.jsx';
+import ProductForm from '../Components/products/ProductForm.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -37,8 +39,6 @@ import SecurityIcon from '@mui/icons-material/Security';
 import { toast } from 'react-toastify';
 import { GlobalInfo } from '../Context/GlobalInfo.jsx';
 import { useProducts } from '../Context/ProductContext';
-import AdminSidebar from '../Components/layout/AdminSidebar.jsx';
-import ProductForm from '../Components/products/ProductForm.jsx';
 
 const DRAWER_WIDTH = 280;
 

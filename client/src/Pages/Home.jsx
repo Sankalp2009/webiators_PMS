@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { Link } from "react-router";
 import { Box, Container, Typography, Button, Grid, Chip, Paper, CircularProgress } from "@mui/material";
+import ProductCard from '../Components/products/ProductCard.jsx';
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import { GlobalInfo } from '../Context/GlobalInfo.jsx';
-import ProductCard from "../Components/products/ProductCard.jsx";
 
 const Home = () => {
   const { isAuth } = useContext(GlobalInfo);
