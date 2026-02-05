@@ -1,0 +1,37 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Creating an Product Management System (admin) with Protected Routes",
+  "license": "ISC",
+  "author": "Sankalp Patel",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "nodemon server.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "hpp": "^0.2.3",
+    "joi": "^18.0.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.5",
+    "morgan": "^1.10.1",
+    "nodemon": "^3.1.11"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.18",
+    "supertest": "^7.2.2",
+    "vitest": "^3.2.4"
+  }
+}
