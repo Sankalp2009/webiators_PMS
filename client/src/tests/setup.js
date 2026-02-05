@@ -8,7 +8,7 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-// Mock localStorage properly
+// Mock localStorage
 const localStorageMock = {
   data: {},
   getItem(key) {
@@ -44,4 +44,3 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: vi.fn(),
   })),
 });
-

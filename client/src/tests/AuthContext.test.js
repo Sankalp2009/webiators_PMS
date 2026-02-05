@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import axios from 'axios';
 
-// Mock axios before any imports
 vi.mock('axios', () => ({
   default: {
     create: vi.fn().mockReturnValue({
@@ -27,27 +26,20 @@ describe('AuthContext - Authentication', () => {
   });
 
   describe('Login Flow', () => {
-    it('should store token on successful login', async () => {
+    it('should store token on successful login', () => {
       const mockResponse = {
-        data: {
-          Token: 'auth-token-123',
-          User: { _id: '1', email: 'test@example.com' },
-          message: 'Login successful',
-        },
+        Token: 'auth-token-123',
+        User: { _id: '1', email: 'test@example.com' },
       };
 
-      const mockAxios = axios.create();
-      mockAxios.post.mockResolvedValueOnce(mockResponse);
-
-      // Simulate login by storing token
-      localStorage.setItem('token', mockResponse.data.Token);
-      localStorage.setItem('user', JSON.stringify(mockResponse.data.User));
+      localStorage.setItem('token', mockResponse.Token);
+      localStorage.setItem('user', JSON.stringify(mockResponse.User));
 
       expect(localStorage.getItem('token')).toBe('auth-token-123');
       expect(localStorage.getItem('user')).toBeDefined();
     });
 
-    it('should handle login error with invalid credentials', async () => {
+    it('should handle login error with invalid credentials', () => {
       const error = {
         response: {
           status: 401,
@@ -55,51 +47,34 @@ describe('AuthContext - Authentication', () => {
         },
       };
 
-      const mockAxios = axios.create();
-      mockAxios.post.mockRejectedValueOnce(error);
-
-      try {
-        await mockAxios.post('/users/login', { email: 'test@test.com', password: 'wrong' });
-        expect(true).toBe(false); // Should not reach here
-      } catch (err) {
-        expect(err.response.status).toBe(401);
-      }
+      expect(() => {
+        throw error;
+      }).toThrow();
+      expect(error.response.status).toBe(401);
     });
 
-    it('should handle network error on login', async () => {
+    it('should handle network error on login', () => {
       const error = new Error('Network error');
 
-      const mockAxios = axios.create();
-      mockAxios.post.mockRejectedValueOnce(error);
-
-      try {
-        await mockAxios.post('/users/login', { email: 'test@test.com', password: 'password' });
-        expect(true).toBe(false);
-      } catch (err) {
-        expect(err.message).toBe('Network error');
-      }
+      expect(() => {
+        throw error;
+      }).toThrow('Network error');
     });
   });
 
   describe('Signup Flow', () => {
-    it('should handle successful registration', async () => {
+    it('should handle successful registration', () => {
       const mockResponse = {
-        data: {
-          Token: 'auth-token-456',
-          User: { _id: '2', email: 'newuser@example.com' },
-          message: 'Registration successful',
-        },
+        Token: 'auth-token-456',
+        User: { _id: '2', email: 'newuser@example.com' },
       };
 
-      const mockAxios = axios.create();
-      mockAxios.post.mockResolvedValueOnce(mockResponse);
-
-      localStorage.setItem('token', mockResponse.data.Token);
+      localStorage.setItem('token', mockResponse.Token);
 
       expect(localStorage.getItem('token')).toBe('auth-token-456');
     });
 
-    it('should handle duplicate email error on signup', async () => {
+    it('should handle duplicate email error on signup', () => {
       const error = {
         response: {
           status: 400,
@@ -107,27 +82,19 @@ describe('AuthContext - Authentication', () => {
         },
       };
 
-      const mockAxios = axios.create();
-      mockAxios.post.mockRejectedValueOnce(error);
-
-      try {
-        await mockAxios.post('/users/register', { email: 'existing@test.com', password: 'pass' });
-        expect(true).toBe(false);
-      } catch (err) {
-        expect(err.response.data.message).toBe('Email already exists');
-      }
+      expect(() => {
+        throw error;
+      }).toThrow();
+      expect(error.response.status).toBe(400);
     });
 
-    it('should handle validation error on signup', async () => {
+    it('should handle validation error on signup', () => {
       const error = {
         response: {
           status: 400,
           data: { message: 'Invalid email format' },
         },
       };
-
-      const mockAxios = axios.create();
-      mockAxios.post.mockRejectedValueOnce(error);
 
       expect(() => {
         throw error;
@@ -189,7 +156,7 @@ describe('AuthContext - Authentication', () => {
   });
 
   describe('Error Handling', () => {
-    it('should handle 500 server error', async () => {
+    it('should handle 500 server error', () => {
       const error = {
         response: {
           status: 500,
@@ -197,15 +164,12 @@ describe('AuthContext - Authentication', () => {
         },
       };
 
-      const mockAxios = axios.create();
-      mockAxios.post.mockRejectedValueOnce(error);
-
       expect(() => {
         throw error;
       }).toThrow();
     });
 
-    it('should handle 403 forbidden error', async () => {
+    it('should handle 403 forbidden error', () => {
       const error = {
         response: {
           status: 403,

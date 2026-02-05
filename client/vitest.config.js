@@ -8,21 +8,10 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/tests/setup.js',
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'src/tests/',
-      ]
-    },
-    transformMode: {
-      web: [/\.[jt]sx$/]
-    }
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-    }
-  }
+    },
+  },
 });

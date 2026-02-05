@@ -23,9 +23,6 @@ vi.mock('axios', () => {
   return { default: mockAxios };
 });
 
-// Import after mocking
-import { productAPI } from '../Utils/Api';
-
 describe('Product API', () => {
   beforeEach(() => {
     localStorage.setItem('token', 'test-token');
@@ -41,16 +38,11 @@ describe('Product API', () => {
       const mockProducts = {
         status: 'success',
         products: [
-          { _id: '1', productName: 'Product 1', price: 100 },
-          { _id: '2', productName: 'Product 2', price: 200 },
+          { _id: '1', name: 'Product 1', price: 100 },
+          { _id: '2', name: 'Product 2', price: 200 },
         ],
       };
 
-      // Mock the API response
-      const createMock = axios.create();
-      createMock.get.mockResolvedValueOnce({ data: mockProducts });
-
-      // Expected behavior
       expect(mockProducts.products).toHaveLength(2);
       expect(mockProducts.status).toBe('success');
     });
@@ -67,25 +59,24 @@ describe('Product API', () => {
     it('should create product successfully', () => {
       const productData = {
         metaTitle: 'Test Product',
-        productName: 'Test Product',
+        name: 'Test Product',
         slug: 'test-product',
         price: 100,
         description: 'Test description',
-        galleryImages: [{ url: 'image.jpg', alt: 'Test' }],
       };
 
       expect(productData).toBeDefined();
-      expect(productData.productName).toBe('Test Product');
+      expect(productData.name).toBe('Test Product');
       expect(productData.price).toBe(100);
     });
   });
 
   describe('updateProduct', () => {
     it('should prepare update product request', () => {
-      const productData = { productName: 'Updated Product' };
+      const productData = { name: 'Updated Product' };
 
       expect(productData).toBeDefined();
-      expect(productData.productName).toBe('Updated Product');
+      expect(productData.name).toBe('Updated Product');
     });
   });
 

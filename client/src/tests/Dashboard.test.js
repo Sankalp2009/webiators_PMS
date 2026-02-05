@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import axios from 'axios';
 
-// Mock axios
 vi.mock('axios', () => ({
   default: {
     create: vi.fn().mockReturnValue({
@@ -115,7 +114,7 @@ describe('Dashboard - Product Management Page', () => {
       expect(filtered[0]._id).toBe('2');
     });
 
-    it('should handle delete error gracefully', async () => {
+    it('should handle delete error gracefully', () => {
       const error = {
         response: {
           status: 500,
@@ -184,7 +183,7 @@ describe('Dashboard - Product Management Page', () => {
   });
 
   describe('Error Handling', () => {
-    it('should handle API error on fetch', async () => {
+    it('should handle API error on fetch', () => {
       const error = {
         response: {
           status: 500,
@@ -197,7 +196,7 @@ describe('Dashboard - Product Management Page', () => {
       }).toThrow();
     });
 
-    it('should handle network timeout', async () => {
+    it('should handle network timeout', () => {
       const error = new Error('Request timeout');
 
       expect(() => {

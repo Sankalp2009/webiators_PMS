@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import axios from 'axios';
 
-// Mock axios
 vi.mock('axios', () => ({
   default: {
     create: vi.fn().mockReturnValue({
@@ -25,7 +24,6 @@ describe('ProductContext - Product Management', () => {
 
   afterEach(() => {
     localStorage.clear();
-    vi.clearAllMocks();
   });
 
   describe('Fetch Products', () => {
@@ -34,7 +32,7 @@ describe('ProductContext - Product Management', () => {
       expect(initialState).toEqual([]);
     });
 
-    it('should simulate fetching products', async () => {
+    it('should simulate fetching products', () => {
       const mockProducts = [
         { _id: '1', name: 'Product 1', price: 100, slug: 'product-1' },
         { _id: '2', name: 'Product 2', price: 200, slug: 'product-2' },
@@ -44,7 +42,7 @@ describe('ProductContext - Product Management', () => {
       expect(mockProducts[0].name).toBe('Product 1');
     });
 
-    it('should handle fetch products error', async () => {
+    it('should handle fetch products error', () => {
       const error = new Error('Network error');
       expect(() => {
         throw error;
@@ -80,7 +78,7 @@ describe('ProductContext - Product Management', () => {
       expect(productData.price).toBeGreaterThan(0);
     });
 
-    it('should handle validation error on create', async () => {
+    it('should handle validation error on create', () => {
       const error = {
         response: {
           status: 400,
@@ -110,7 +108,7 @@ describe('ProductContext - Product Management', () => {
       expect(productId).toBeDefined();
     });
 
-    it('should handle error on update', async () => {
+    it('should handle error on update', () => {
       const error = {
         response: {
           status: 404,
@@ -142,7 +140,7 @@ describe('ProductContext - Product Management', () => {
       expect(filtered[0]._id).toBe('2');
     });
 
-    it('should handle delete error and recover', async () => {
+    it('should handle delete error and recover', () => {
       const error = {
         response: {
           status: 500,
@@ -181,7 +179,7 @@ describe('ProductContext - Product Management', () => {
   });
 
   describe('Error Handling', () => {
-    it('should handle 404 product not found', async () => {
+    it('should handle 404 product not found', () => {
       const error = {
         response: {
           status: 404,
@@ -194,7 +192,7 @@ describe('ProductContext - Product Management', () => {
       }).toThrow();
     });
 
-    it('should handle 500 server error', async () => {
+    it('should handle 500 server error', () => {
       const error = {
         response: {
           status: 500,
@@ -207,18 +205,12 @@ describe('ProductContext - Product Management', () => {
       }).toThrow();
     });
 
-    it('should handle network timeout', async () => {
+    it('should handle network timeout', () => {
       const error = new Error('Request timeout');
 
       expect(() => {
         throw error;
       }).toThrow('Request timeout');
-    });
-  });
-});
-        const product = result.current.getProductBySlug('product-1');
-        expect(product).toEqual(mockProducts.products[0]);
-      });
     });
   });
 });
