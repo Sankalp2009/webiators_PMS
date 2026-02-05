@@ -25,19 +25,30 @@ export const ProductProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      const data = await productAPI.getAllProducts();
-      console.log("Fetched products:", data);
-      setProducts(data.products || []);
+      const response = await productAPI.getAllProducts();
+      console.log("Fetched products:", response);
+      
+      // FIXED: Handle the response structure correctly
+      if (response.status === "success" && response.data) {
+        setProducts(response.data);
+      } else {
+        setProducts([]);
+      }
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to fetch products");
+      const errorMessage = err.response?.data?.message || "Failed to fetch products";
+      setError(errorMessage);
       console.error("Error fetching products:", err);
+      setProducts([]); // Reset to empty array on error
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (!isAuth) return;
+    if (!isAuth) {
+      setProducts([]);
+      return;
+    }
     fetchProducts();
   }, [isAuth]);
 
@@ -47,8 +58,9 @@ export const ProductProvider = ({ children }) => {
 
   const getProductById = async (id) => {
     try {
-      const data = await productAPI.getProductById(id);
-      return data.product;
+      const response = await productAPI.getProductById(id);
+      // FIXED: Return data from response correctly
+      return response.data;
     } catch (err) {
       console.error("Error fetching product:", err);
       throw err;
@@ -67,18 +79,22 @@ export const ProductProvider = ({ children }) => {
         price: productData.price,
         discountedPrice: productData.discountedPrice,
         description: productData.description,
-        galleryImages: productData.images.map((url) => ({
+        galleryImages: productData.images?.map((url) => ({
           url,
           alt: productData.name,
-        })),
+        })) || [],
         isActive: true,
       };
 
-      const data = await productAPI.createProduct(apiData);
+      const response = await productAPI.createProduct(apiData);
+      
+      // Refresh products list after adding
       await fetchProducts();
-      return data;
+      
+      return response;
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to create product");
+      const errorMessage = err.response?.data?.message || "Failed to create product";
+      setError(errorMessage);
       throw err;
     } finally {
       setLoading(false);
@@ -97,17 +113,21 @@ export const ProductProvider = ({ children }) => {
         price: productData.price,
         discountedPrice: productData.discountedPrice,
         description: productData.description,
-        galleryImages: productData.images.map((url) => ({
+        galleryImages: productData.images?.map((url) => ({
           url,
           alt: productData.name,
-        })),
+        })) || [],
       };
 
-      const data = await productAPI.updateProduct(id, apiData);
+      const response = await productAPI.updateProduct(id, apiData);
+      
+      // Refresh products list after updating
       await fetchProducts();
-      return data;
+      
+      return response;
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to update product");
+      const errorMessage = err.response?.data?.message || "Failed to update product";
+      setError(errorMessage);
       throw err;
     } finally {
       setLoading(false);
@@ -117,13 +137,16 @@ export const ProductProvider = ({ children }) => {
   const deleteProduct = async (id) => {
     try {
       setError(null);
+      
       // Optimistic update - remove from UI immediately
       setProducts((prevProducts) => prevProducts.filter((p) => p._id !== id));
 
       // Delete from server
       await productAPI.deleteProduct(id);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to delete product");
+      const errorMessage = err.response?.data?.message || "Failed to delete product";
+      setError(errorMessage);
+      
       // Re-fetch on error to restore the deleted item
       await fetchProducts();
       throw err;

@@ -1,24 +1,44 @@
 import axios from "axios";
 
 const API_BASE_URL = "https://webiators-pms.onrender.com";
-const token = localStorage.getItem("token");
+
 // Create axios instance with default config
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    "Authorization": `Bearer ${token}`,
     "Content-Type": "application/json",
   },
+  withCredentials: true, // Important for CORS with credentials
 });
 
-// Add token to requests
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+// FIXED: Add token to requests dynamically (not at initialization)
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  return config;
-});
+);
+
+// Add response interceptor for better error handling
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response?.status === 401) {
+      // Token expired or invalid
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
 
 export const productAPI = {
   getAllProducts: async () => {

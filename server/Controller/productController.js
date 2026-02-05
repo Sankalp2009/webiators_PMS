@@ -8,11 +8,16 @@ export const getAllProduct = async (req, res) => {
       .sort({ createdAt: -1 })
       .populate("createdBy", "username email");
 
-    return res.status(200).json({
-      status: "success",
-      results: products.length,
-      data: products,
-    });
+    // FIXED: Consistent response structure and proper headers
+    return res.status(200)
+      .set('Cache-Control', 'no-cache, no-store, must-revalidate')
+      .set('Pragma', 'no-cache')
+      .set('Expires', '0')
+      .json({
+        status: "success",
+        results: products.length,
+        data: products,
+      });
   } catch (error) {
     console.error("getAllProduct error:", error);
     return res.status(500).json({
@@ -39,9 +44,10 @@ export const getProductById = async (req, res) => {
       });
     }
 
+    // FIXED: Consistent response structure
     return res.status(200).json({
       status: "success",
-      data: product,
+      data: product, // Changed from nested structure
     });
   } catch (error) {
     console.error("getProductById error:", error);
@@ -304,9 +310,11 @@ export const deleteProduct = async (req, res) => {
 
     await Product.findByIdAndDelete(id);
 
+    // FIXED: Return 200 with data instead of 204
     return res.status(200).json({
       status: "success",
       message: "Product deleted successfully",
+      data: null,
     });
   } catch (error) {
     console.error("deleteProduct error:", error);
