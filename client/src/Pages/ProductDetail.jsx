@@ -12,6 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
   CircularProgress,
+  Paper,
 } from "@mui/material";
 import ImageGallery from "../Components/products/ImageGallery.jsx";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -45,6 +46,11 @@ const ProductDetail = () => {
 
     loadProduct();
   }, [slug, getProductBySlug]);
+
+  // Version check - helps verify deployment
+  useEffect(() => {
+    console.log("✓ ProductDetail v3.0 - Two Column Layout (5:7 ratio)");
+  }, []);
 
   if (loading) {
     return (
@@ -90,12 +96,11 @@ const ProductDetail = () => {
     { icon: InventoryIcon, text: "Easy 30-day returns" },
   ];
 
-  // Transform galleryImages to simple array for ImageGallery component
   const images = product.galleryImages?.map((img) => img.url) || [];
 
   return (
     <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
-      {/* Header with Back Button - Full Width */}
+      {/* Sticky Header */}
       <Box
         sx={{
           bgcolor: "background.paper",
@@ -103,7 +108,8 @@ const ProductDetail = () => {
           borderColor: "divider",
           position: "sticky",
           top: 0,
-          zIndex: 100,
+          zIndex: 1000,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
         }}
       >
         <Container maxWidth="xl" sx={{ py: 2 }}>
@@ -111,7 +117,11 @@ const ProductDetail = () => {
             component={Link}
             to="/"
             startIcon={<ArrowBackIcon />}
-            sx={{ color: "text.secondary", textTransform: "none" }}
+            sx={{ 
+              color: "text.secondary", 
+              textTransform: "none",
+              fontWeight: 500,
+            }}
           >
             Back to Products
           </Button>
@@ -119,38 +129,37 @@ const ProductDetail = () => {
       </Box>
 
       {/* Main Content - Two Column Layout */}
-      <Container maxWidth="xl" sx={{ py: 6 }}>
-        <Grid container spacing={2} columns={16}>
-          {/* LEFT COLUMN - Image Gallery (5/12 width) */}
+      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 6 } }}>
+        {/* Grid Container: 5:7 Ratio */}
+        <Grid container spacing={{ xs: 4, md: 6 }}>
+          
+          {/* LEFT COLUMN - Image Gallery (5/12 = 41.67% width) */}
           <Grid item xs={12} md={5}>
             <Box
-              className="slide-up"
               sx={{
-                position: "sticky",
-                top: 100,
+                position: { xs: "relative", md: "sticky" },
+                top: { md: 100 },
                 height: "fit-content",
               }}
             >
-              <ImageGallery images={images} productName={product.productName} />
+              <ImageGallery 
+                images={images} 
+                productName={product.productName} 
+              />
             </Box>
           </Grid>
 
-          {/* RIGHT COLUMN - Product Info (7/12 width) */}
+          {/* RIGHT COLUMN - Product Info (7/12 = 58.33% width) */}
           <Grid item xs={12} md={7}>
-            <Box
-              className="slide-up"
-              sx={{
-                animationDelay: "0.1s",
-                pl: { md: 4 }, // Extra padding on desktop for better spacing
-              }}
-            >
-              {/* Category Badge */}
+            <Box sx={{ pl: { md: 4 } }}>
+              
+              {/* Category */}
               <Chip
                 label={product.category || "Product"}
                 size="small"
+                color="primary"
                 sx={{
                   mb: 2,
-                  width: "fit-content",
                   fontWeight: 600,
                   fontSize: 11,
                   letterSpacing: 0.5,
@@ -160,21 +169,27 @@ const ProductDetail = () => {
 
               {/* Title */}
               <Typography
-                variant="h2"
-                fontWeight={700}
+                variant="h1"
                 sx={{
-                  mb: 3,
+                  fontSize: { xs: 28, sm: 34, md: 40 },
+                  fontWeight: 700,
                   lineHeight: 1.2,
                   letterSpacing: -0.5,
-                  fontSize: { xs: 28, sm: 36, md: 40 },
+                  mb: 3,
                 }}
               >
                 {product.productName}
               </Typography>
 
-              {/* Price Section */}
-              <Box
-                sx={{ mb: 4, pb: 3, borderBottom: 1, borderColor: "divider" }}
+              {/* Price Card */}
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 3,
+                  mb: 4,
+                  bgcolor: "grey.50",
+                  borderRadius: 2,
+                }}
               >
                 <Box
                   sx={{
@@ -201,7 +216,6 @@ const ProductDetail = () => {
                           fontSize: { xs: 20, sm: 24 },
                           color: "text.secondary",
                           textDecoration: "line-through",
-                          fontWeight: 500,
                         }}
                       >
                         ${product.price.toFixed(2)}
@@ -210,7 +224,6 @@ const ProductDetail = () => {
                         label={`Save $${savings.toFixed(2)}`}
                         color="error"
                         size="small"
-                        variant="filled"
                         sx={{ fontWeight: 700 }}
                       />
                     </>
@@ -221,19 +234,46 @@ const ProductDetail = () => {
                         fontWeight: 700,
                       }}
                     >
-                      ${product.price.toFixed(2)}
+                      ${product.price?.toFixed(2)}
                     </Typography>
                   )}
                 </Box>
-              </Box>
 
-              {/* Actions */}
+                {/* Stock Indicator */}
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                  <Box
+                    sx={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: "50%",
+                      bgcolor: product.stock > 0 ? "success.main" : "error.main",
+                      boxShadow: product.stock > 0 
+                        ? "0 0 0 3px rgba(76, 175, 80, 0.1)"
+                        : "0 0 0 3px rgba(244, 67, 54, 0.1)",
+                    }}
+                  />
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: product.stock > 0 ? "success.main" : "error.main",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {product.stock > 0 
+                      ? `In Stock • ${product.stock} available`
+                      : "Out of Stock"
+                    }
+                  </Typography>
+                </Box>
+              </Paper>
+
+              {/* Buttons */}
               <Box
                 sx={{
                   display: "flex",
                   gap: 2,
                   mb: 5,
-                  flexWrap: { xs: "wrap", sm: "nowrap" },
+                  flexDirection: { xs: "column", sm: "row" },
                 }}
               >
                 <Button
@@ -242,12 +282,11 @@ const ProductDetail = () => {
                   startIcon={<ShoppingCartIcon />}
                   disabled={product.stock === 0}
                   sx={{
-                    flex: { xs: "1 1 100%", sm: 1 },
+                    flex: 1,
                     py: 1.75,
                     fontSize: 16,
                     fontWeight: 600,
                     textTransform: "none",
-                    borderRadius: 1,
                   }}
                 >
                   Add to Cart
@@ -255,39 +294,47 @@ const ProductDetail = () => {
                 <Button
                   variant="outlined"
                   size="large"
+                  startIcon={<FavoriteIcon />}
                   sx={{
-                    px: 3,
                     py: 1.75,
-                    borderRadius: 1,
-                    minWidth: { xs: "100%", sm: "auto" },
+                    px: 3,
+                    fontWeight: 600,
+                    textTransform: "none",
                   }}
                 >
-                  <FavoriteIcon sx={{ fontSize: 22 }} />
+                  Save
                 </Button>
               </Box>
 
               {/* Features */}
-              <Box
-                sx={{ mb: 5, pb: 4, borderBottom: 1, borderColor: "divider" }}
+              <Paper
+                elevation={0}
+                sx={{
+                  p: 3,
+                  mb: 4,
+                  bgcolor: "grey.50",
+                  borderRadius: 2,
+                }}
               >
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontSize: 16,
+                    fontWeight: 700,
+                    mb: 2,
+                  }}
+                >
+                  What's Included
+                </Typography>
                 <List disablePadding>
                   {features.map((feature, index) => (
-                    <ListItem
-                      key={index}
-                      sx={{
-                        px: 0,
-                        py: 1.5,
-                      }}
-                    >
-                      <ListItemIcon
-                        sx={{ minWidth: 44, color: "primary.main" }}
-                      >
+                    <ListItem key={index} sx={{ px: 0, py: 1.5 }}>
+                      <ListItemIcon sx={{ minWidth: 40, color: "primary.main" }}>
                         <feature.icon />
                       </ListItemIcon>
                       <ListItemText
                         primary={feature.text}
                         primaryTypographyProps={{
-                          color: "text.primary",
                           variant: "body2",
                           fontWeight: 500,
                         }}
@@ -295,14 +342,17 @@ const ProductDetail = () => {
                     </ListItem>
                   ))}
                 </List>
-              </Box>
+              </Paper>
 
               {/* Description */}
               <Box>
                 <Typography
                   variant="h6"
-                  fontWeight={700}
-                  sx={{ mb: 2.5, fontSize: 18 }}
+                  sx={{
+                    fontSize: 18,
+                    fontWeight: 700,
+                    mb: 2.5,
+                  }}
                 >
                   About This Product
                 </Typography>
@@ -311,16 +361,9 @@ const ProductDetail = () => {
                     color: "text.secondary",
                     lineHeight: 1.8,
                     fontSize: 15,
-                    "& p": {
-                      mb: 2,
-                    },
-                    "& ul": {
-                      ml: 2.5,
-                      mb: 2,
-                    },
-                    "& li": {
-                      mb: 1,
-                    },
+                    "& p": { mb: 2 },
+                    "& ul": { ml: 2.5, mb: 2, pl: 1 },
+                    "& li": { mb: 1 },
                     "& h1, & h2, & h3, & h4, & h5, & h6": {
                       color: "text.primary",
                       fontWeight: 600,
