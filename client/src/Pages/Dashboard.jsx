@@ -49,7 +49,7 @@ const Dashboard = () => {
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
   const handleEdit = (product) => {
-    // Transform product data from API format to form format
+  
     const formData = {
       id: product._id,
       metaTitle: product.metaTitle,
@@ -96,18 +96,6 @@ const Dashboard = () => {
         bgcolor: "background.default",
       }}
     >
-      {/* Sidebar */}
-      <Box
-        sx={{
-          width: 280,
-          bgcolor: "background.paper",
-          borderRight: 1,
-          borderColor: "divider",
-          overflow: "auto",
-        }}
-      >
-        <AdminSidebar />
-      </Box>
 
       {/* Main Content */}
       <Box
