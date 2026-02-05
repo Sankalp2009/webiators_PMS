@@ -46,7 +46,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const { products, loading, deleteProduct } = useProducts();
-
+ console.log(products);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(undefined);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
@@ -190,18 +190,7 @@ const Dashboard = () => {
                   <TableRow>
                     <TableCell width={80}>Image</TableCell>
                     <TableCell>Product</TableCell>
-                    <TableCell
-                      sx={{ display: { xs: "none", md: "table-cell" } }}
-                    >
-                      Category
-                    </TableCell>
                     <TableCell align="right">Price</TableCell>
-                    <TableCell
-                      align="center"
-                      sx={{ display: { xs: "none", sm: "table-cell" } }}
-                    >
-                      Stock
-                    </TableCell>
                     <TableCell align="right">Actions</TableCell>
                   </TableRow>
                 </TableHead>
