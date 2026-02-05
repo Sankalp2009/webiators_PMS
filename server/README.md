@@ -70,7 +70,7 @@ A secure RESTful API for product management built with Node.js, Express.js, and 
 
 ### Base URL
 ```
-http://localhost:5000/api/v1
+http://127.0.0.1:5000/api/v1
 ```
 
 ### Health Check

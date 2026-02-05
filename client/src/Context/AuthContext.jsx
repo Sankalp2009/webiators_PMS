@@ -1,0 +1,86 @@
+import React, { useState  } from "react";
+import { GlobalInfo } from "./GlobalInfo.jsx";
+import { InitialState } from "./InitialState.jsx";
+import axios from "axios";
+
+const AuthContext = ({ children }) => {
+   const [authState, setAuthState] = useState(() => {
+    const storedToken = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+
+    if (storedToken && storedUser) {
+      return {
+        user: JSON.parse(storedUser),
+        isAuth: true,
+        token: storedToken,
+      };
+    }
+    return InitialState;
+  });
+
+  const login = async (email, password) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:5000/api/v1/login", { email, password });
+      const { token, user } = response.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      setAuthState({
+        user: user,
+        isAuth: true,
+        token: token,
+      });
+
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || "Login failed",
+      };
+    }
+  };
+
+  const signup = async (username, email, password) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:5000/api/v1/login/register", {
+        username,
+        email,
+        password,
+      });
+      const { token, user } = response.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      setAuthState({
+        user: user,
+        isAuth: true,
+        token: token,
+      });
+
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || "Registration failed",
+      };
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setAuthState({
+      user: null,
+      isAuth: false,
+      token: null,
+    });
+  };
+
+  return (
+    <GlobalInfo.Provider value={{ ...authState, login, signup, logout }}>
+      {children}
+    </GlobalInfo.Provider>
+  );
+};
+
+export default AuthContext

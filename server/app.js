@@ -63,7 +63,7 @@ app.use("/api", generalLimiter);
 
 app.use("/api/v1/users", strictLimiter);
 
-app.use("/api/v1/users", userRoutes);
+app.use("/api/v1", userRoutes);
 app.use("/api/v1/products", ProductRouter);
 
 // 404
