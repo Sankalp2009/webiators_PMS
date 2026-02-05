@@ -75,17 +75,6 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <Box sx={{ display: { xs: "none", md: "flex" }, ml: 6, gap: 3 }}>
-            <Button
-              component={Link}
-              to="/"
-              color="inherit"
-              sx={{
-                color: "text.secondary",
-                "&:hover": { color: "text.primary" },
-              }}
-            >
-              Products
-            </Button>
             {isAuth && (
               <Button
                 component={Link}
