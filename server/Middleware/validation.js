@@ -59,8 +59,6 @@ const singleProductSchema = Joi.object({
     .messages({
       "array.max": "Cannot have more than 10 gallery images",
     }),
-  category: Joi.string().min(2).max(50).optional(),
-  stock: Joi.number().min(0).integer().optional(),
   isActive: Joi.boolean().optional().default(true),
 }).options({ stripUnknown: true });
 

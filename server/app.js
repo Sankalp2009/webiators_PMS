@@ -16,10 +16,13 @@ app.set("trust proxy", 1);
 
 app.use(compression());
 
-// ✅ Optimized CORS with proper headers
+
+
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://webiators-pms.vercel.app"],
+    origin:
+      process.env.NODE_ENV === "development"
+        ? "https://webiators-pms.vercel.app" : "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -27,12 +30,12 @@ app.use(
   }),
 );
 
-// ✅ Parsing middleware
+
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
 
-// ✅ Security & clean parameters
+
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
