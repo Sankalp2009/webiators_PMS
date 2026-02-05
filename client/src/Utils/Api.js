@@ -1,11 +1,12 @@
 import axios from "axios";
 
 const API_BASE_URL = "https://webiators-pms.onrender.com/api/v1";
-
+const token = localStorage.getItem("token");
 // Create axios instance with default config
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
+    'Authorization': `Bearer ${token}`,
     'Access-Control-Allow-Origin': '*',
     "Content-Type": "application/json",
   },
