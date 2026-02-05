@@ -30,32 +30,37 @@
    }, [isAuth, navigate]);
  
    const handleSubmit = async (e) => {
-     e.preventDefault();
-     setIsLoading(true);
- 
-     if (!formData.username || !formData.email || !formData.password) {
-       toast.error('Please fill in all fields');
-       setIsLoading(false);
-       return;
-     }
- 
-     if (formData.password.length < 6) {
-       toast.error('Password must be at least 6 characters');
-       setIsLoading(false);
-       return;
-     }
- 
-     const success = await signup(formData.username, formData.email, formData.password);
- 
-     if (success) {
-       toast.success('Account created successfully!');
-       navigate('/dashboard');
-     } else {
-       toast.error('Failed to create account');
-     }
- 
-     setIsLoading(false);
-   };
+  e.preventDefault();
+  setIsLoading(true);
+
+  if (!formData.username || !formData.email || !formData.password) {
+    toast.error("Please fill in all fields");
+    setIsLoading(false);
+    return;
+  }
+
+  if (formData.password.length < 6) {
+    toast.error("Password must be at least 6 characters");
+    setIsLoading(false);
+    return;
+  }
+
+  const result = await signup(
+    formData.username,
+    formData.email,
+    formData.password
+  );
+
+  if (result.success) {
+    toast.success(result.message || "Account created");
+    navigate("/dashboard");
+  } else {
+    toast.error(result.message); 
+  }
+
+  setIsLoading(false);
+};
+
  
    return (
     <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'background.default' }}>

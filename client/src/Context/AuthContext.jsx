@@ -1,10 +1,10 @@
-import React, { useState  } from "react";
+import React, { useState } from "react";
 import { GlobalInfo } from "./GlobalInfo.jsx";
 import { InitialState } from "./InitialState.jsx";
 import axios from "axios";
 
 const AuthContext = ({ children }) => {
-   const [authState, setAuthState] = useState(() => {
+  const [authState, setAuthState] = useState(() => {
     const storedToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
 
@@ -18,50 +18,62 @@ const AuthContext = ({ children }) => {
     return InitialState;
   });
 
+  // 🔴 LOGIN
   const login = async (email, password) => {
     try {
-      const response = await axios.post("https://webiators-pms.onrender.com/api/v1/users/login", { email, password });
+      const response = await axios.post(
+        "https://webiators-pms.onrender.com/api/v1/users/login",
+        { email, password }
+      );
+
       const { token, user } = response.data;
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+
       setAuthState({
-        user: user,
+        user,
         isAuth: true,
-        token: token,
+        token,
       });
 
-      return { success: true };
+      return { success: true, message: response.data.message };
     } catch (error) {
       return {
         success: false,
-        message: error.response?.data?.message || "Login failed",
+        message:
+          error.response?.data?.message ||
+          "Login failed. Please try again.",
       };
     }
   };
 
+  // 🔴 SIGNUP
   const signup = async (username, email, password) => {
     try {
-      const response = await axios.post("https://webiators-pms.onrender.com/api/v1/users/register", {
-        username,
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://webiators-pms.onrender.com/api/v1/users/register",
+        { username, email, password }
+      );
+
       const { token, user } = response.data;
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+
       setAuthState({
-        user: user,
+        user,
         isAuth: true,
-        token: token,
+        token,
       });
 
-      return { success: true };
+      return { success: true, message: response.data.message };
     } catch (error) {
       return {
         success: false,
-        message: error.response?.data?.message || "Registration failed",
+        message:
+          error.response?.data?.message ||
+          "Registration failed. Please try again.",
       };
     }
   };
@@ -69,6 +81,7 @@ const AuthContext = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+
     setAuthState({
       user: null,
       isAuth: false,
@@ -83,4 +96,4 @@ const AuthContext = ({ children }) => {
   );
 };
 
-export default AuthContext
+export default AuthContext;
