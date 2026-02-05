@@ -16,21 +16,31 @@ app.set("trust proxy", 1);
 
 app.use(compression());
 
-// ✅ Optimized CORS
-app.use(
-  cors({
-    origin:
-      process.env.NODE_ENV === "production"
-        ? "https://webiators-pms.vercel.app"
-        : "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  }),
-);
+// ✅ CORS Configuration with explicit credentials handling
+const corsOptions = {
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      "https://webiators-pms.vercel.app",
+      "http://localhost:5173",
+      "http://localhost:3000",
+    ];
 
-app.options("*", cors());
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
 
+app.use(cors(corsOptions));
+
+// ✅ Preflight requests
+app.options("*", cors(corsOptions));
 
 // ✅ Parsing middleware
 app.use(express.json({ limit: "10kb" }));
@@ -66,12 +76,10 @@ app.use("/api", (req, res, next) => {
   generalLimiter(req, res, next);
 });
 
-
 app.use("/api/v1/users", (req, res, next) => {
   if (req.method === "OPTIONS") return next();
   strictLimiter(req, res, next);
 });
-
 
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/products", ProductRouter);
