@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { productAPI } from "../Utils/Api.js";
-import { GlobalInfo } from "./GlobalInfo.jsx"; // 🔴 ADD THIS
+import { GlobalInfo } from "./GlobalInfo.jsx"; 
 
 const ProductContext = createContext();
 
@@ -14,7 +14,7 @@ export const useProducts = () => {
 };
 
 export const ProductProvider = ({ children }) => {
-  const { isAuth } = useContext(GlobalInfo); // 🔴 ADD THIS
+  const { isAuth } = useContext(GlobalInfo); 
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -35,11 +35,11 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
-  // 🔴 IMPORTANT: only fetch if logged in
+ 
   useEffect(() => {
-    if (!isAuth) return;      // ⭐ THIS FIXES YOUR BUG
-    fetchProducts();
-  }, [isAuth]);
+  if (!isAuth) return;
+  fetchProducts();
+}, [isAuth])
 
   const getProductBySlug = (slug) => {
     return products.find((product) => product.slug === slug);
