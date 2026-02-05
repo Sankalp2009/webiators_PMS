@@ -10,6 +10,7 @@ import userRoutes from "./Routes/userRoutes.js";
 import { generalLimiter, strictLimiter } from "./Utils/rateLimiter.js";
 const app = express();
 
+app.set('trust proxy', 1);
 // Security middleware
 app.use(helmet({
   contentSecurityPolicy: {
@@ -29,6 +30,7 @@ app.use(hpp());
 app.use(compression());
 
 app.use(cookieParser());
+
 
 // CORS configuration
 app.use(
