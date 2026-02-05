@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import axios from 'axios';
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import axios from "axios";
 
-vi.mock('axios', () => ({
+vi.mock("axios", () => ({
   default: {
     create: vi.fn().mockReturnValue({
       get: vi.fn(),
@@ -19,7 +19,7 @@ vi.mock('axios', () => ({
   },
 }));
 
-describe('Integration Tests - Complete User Workflows', () => {
+describe("Integration Tests - Complete User Workflows", () => {
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();
@@ -29,36 +29,36 @@ describe('Integration Tests - Complete User Workflows', () => {
     localStorage.clear();
   });
 
-  describe('User Registration and Login Flow', () => {
-    it('should complete full registration and login flow', async () => {
+  describe("User Registration and Login Flow", () => {
+    it("should complete full registration and login flow", async () => {
       const registerResponse = {
-        Token: 'auth-token-123',
+        Token: "auth-token-123",
         User: {
-          id: '1',
-          email: 'test@example.com',
+          id: "1",
+          email: "test@example.com",
         },
       };
 
       const loginResponse = {
-        Token: 'auth-token-123',
+        Token: "auth-token-123",
         User: {
-          id: '1',
-          email: 'test@example.com',
+          id: "1",
+          email: "test@example.com",
         },
       };
 
-      localStorage.setItem('token', registerResponse.Token);
-      localStorage.setItem('user', JSON.stringify(registerResponse.User));
+      localStorage.setItem("token", registerResponse.Token);
+      localStorage.setItem("user", JSON.stringify(registerResponse.User));
 
-      expect(localStorage.getItem('token')).toBe(registerResponse.Token);
-      expect(localStorage.getItem('user')).toBeDefined();
+      expect(localStorage.getItem("token")).toBe(registerResponse.Token);
+      expect(localStorage.getItem("user")).toBeDefined();
     });
 
-    it('should handle duplicate email during registration', () => {
+    it("should handle duplicate email during registration", () => {
       const error = {
         response: {
           status: 400,
-          data: { message: 'Email already exists' },
+          data: { message: "Email already exists" },
         },
       };
 
@@ -68,29 +68,29 @@ describe('Integration Tests - Complete User Workflows', () => {
     });
   });
 
-  describe('Product Management Flow', () => {
-    it('should create, read, update, and delete product', async () => {
-      const token = 'test-token-123';
-      localStorage.setItem('token', token);
+  describe("Product Management Flow", () => {
+    it("should create, read, update, and delete product", async () => {
+      const token = "test-token-123";
+      localStorage.setItem("token", token);
 
       const createResponse = {
-        _id: 'product-1',
-        name: 'Test Product',
-        slug: 'test-product',
+        _id: "product-1",
+        name: "Test Product",
+        slug: "test-product",
         price: 100,
       };
 
       expect(createResponse._id).toBeDefined();
-      expect(createResponse.name).toBe('Test Product');
+      expect(createResponse.name).toBe("Test Product");
     });
 
-    it('should handle product validation errors', () => {
+    it("should handle product validation errors", () => {
       const error = {
         response: {
           status: 400,
           data: {
-            message: 'Validation failed',
-            field: 'price',
+            message: "Validation failed",
+            field: "price",
           },
         },
       };
@@ -100,17 +100,17 @@ describe('Integration Tests - Complete User Workflows', () => {
       }).toThrow();
     });
 
-    it('should fetch all products', () => {
+    it("should fetch all products", () => {
       const mockProducts = {
         products: [
           {
-            _id: '1',
-            name: 'Product 1',
+            _id: "1",
+            name: "Product 1",
             price: 100,
           },
           {
-            _id: '2',
-            name: 'Product 2',
+            _id: "2",
+            name: "Product 2",
             price: 200,
           },
         ],
@@ -120,12 +120,12 @@ describe('Integration Tests - Complete User Workflows', () => {
     });
   });
 
-  describe('Authentication Error Handling', () => {
-    it('should handle unauthorized access', () => {
+  describe("Authentication Error Handling", () => {
+    it("should handle unauthorized access", () => {
       const error = {
         response: {
           status: 401,
-          data: { message: 'Unauthorized' },
+          data: { message: "Unauthorized" },
         },
       };
 
@@ -134,18 +134,18 @@ describe('Integration Tests - Complete User Workflows', () => {
       }).toThrow();
     });
 
-    it('should handle expired token', () => {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+    it("should handle expired token", () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
 
-      expect(localStorage.getItem('token')).toBeNull();
+      expect(localStorage.getItem("token")).toBeNull();
     });
   });
 
-  describe('Concurrent Requests', () => {
-    it('should handle multiple concurrent API calls', async () => {
+  describe("Concurrent Requests", () => {
+    it("should handle multiple concurrent API calls", async () => {
       const response1 = { products: [] };
-      const response2 = { user: { id: '1' } };
+      const response2 = { user: { id: "1" } };
 
       expect(response1).toBeDefined();
       expect(response2).toBeDefined();
