@@ -23,11 +23,14 @@ app.use(
       process.env.NODE_ENV === "production"
         ? "https://webiators-pms.vercel.app"
         : "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
-    optionsSuccessStatus: 200,
   }),
 );
+
+app.options("*", cors());
+
 
 // ✅ Parsing middleware
 app.use(express.json({ limit: "10kb" }));
@@ -58,9 +61,17 @@ app.get("/health", (req, res) => {
   });
 });
 
-app.use("/api", generalLimiter);
+app.use("/api", (req, res, next) => {
+  if (req.method === "OPTIONS") return next();
+  generalLimiter(req, res, next);
+});
 
-app.use("/api/v1/users", strictLimiter);
+
+app.use("/api/v1/users", (req, res, next) => {
+  if (req.method === "OPTIONS") return next();
+  strictLimiter(req, res, next);
+});
+
 
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/products", ProductRouter);
