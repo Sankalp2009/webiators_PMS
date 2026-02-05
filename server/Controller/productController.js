@@ -1,5 +1,5 @@
 import Product from "../Model/productModel.js";
-import { processRichText } from "../Utils/sanitize.js";
+import { processRichText } from "../Utils/sanitizer.js";
 
 // Get all products
 export const getAllProduct = async (req, res) => {
