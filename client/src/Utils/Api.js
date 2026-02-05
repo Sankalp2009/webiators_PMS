@@ -6,6 +6,7 @@ const API_BASE_URL = "https://webiators-pms.onrender.com/api/v1";
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
+    'Access-Control-Allow-Origin': '*',
     "Content-Type": "application/json",
   },
   withCredentials: true,
