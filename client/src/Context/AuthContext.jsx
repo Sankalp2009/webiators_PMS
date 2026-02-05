@@ -25,8 +25,6 @@ const AuthContext = ({ children }) => {
         "https://webiators-pms.onrender.com/api/v1/users/login",
         { email, password }
       );
-      
-      console.log("Login response:", response); // Debugging log
 
       const { Token, User } = response.data;
 
@@ -57,15 +55,15 @@ const AuthContext = ({ children }) => {
         { username, email, password }
       );
 
-      const { token, user } = response.data;
+      const { Token, User } = response.data;
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", Token);
+      localStorage.setItem("user", JSON.stringify(User));
 
       setAuthState({
-        user,
+        user: User,
         isAuth: true,
-        token,
+        token: Token,
       });
 
       return { success: true, message: response.data.message };

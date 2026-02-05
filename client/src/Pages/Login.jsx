@@ -38,8 +38,6 @@ const Login = () => {
     }
 
     const result = await login(formData.email, formData.password);
-    
-    console.log("Login result:", result); // Debugging log
 
     if (result.success) {
       toast.success(result.message || "Login successful");
