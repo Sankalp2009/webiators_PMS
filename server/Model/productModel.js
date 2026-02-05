@@ -76,7 +76,6 @@ const productSchema = new Schema(
 );
 
 productSchema.index({ productName: 'text', description: 'text' });
-productSchema.index({ slug: 1 });
 productSchema.index({ createdBy: 1 });
 
 const Product = mongoose.models.Product || mongoose.model("Product", productSchema);
