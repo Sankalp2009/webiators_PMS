@@ -18,15 +18,7 @@ app.use(compression());
 
 app.use(cors());
 
-app.use(
-  cors({
-    origin:"https://webiators-pms.vercel.app",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-    maxAge: 86400,
-  }),
-);
+app.use(cors({origin:"https://webiators-pms.vercel.app"}));
 
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
