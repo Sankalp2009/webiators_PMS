@@ -20,7 +20,7 @@ app.use(compression());
 app.use(
   cors({
     origin:
-      process.env.NODE_ENV === "production"
+      process.env.NODE_ENV === "development"
         ? "https://webiators-pms.vercel.app/"
         : "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
