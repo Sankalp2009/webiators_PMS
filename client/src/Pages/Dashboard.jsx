@@ -41,6 +41,9 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const { products, loading, deleteProduct } = useProducts();
+
+  console.log("Products in Dashboard:", products);
+
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(undefined);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);

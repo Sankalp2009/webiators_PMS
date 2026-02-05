@@ -26,6 +26,7 @@ export const ProductProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       const data = await productAPI.getAllProducts();
+      console.log("Fetched products:", data);
       setProducts(data.products || []);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch products");
