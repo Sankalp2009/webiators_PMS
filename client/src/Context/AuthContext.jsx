@@ -18,7 +18,7 @@ const AuthContext = ({ children }) => {
     return InitialState;
   });
 
-  // 🔴 LOGIN
+  
   const login = async (email, password) => {
     try {
       const response = await axios.post(
@@ -48,7 +48,6 @@ const AuthContext = ({ children }) => {
     }
   };
 
-  // 🔴 SIGNUP
   const signup = async (username, email, password) => {
     try {
       const response = await axios.post(

@@ -4,11 +4,9 @@ import { Navigate } from "react-router";
 
 function PrivateRoute({ children }) {
   const { isAuth, token } = useContext(GlobalInfo);
+  console.log("PrivateRoute - isAuth:", isAuth, "token:", token);
 
-  // Check both isAuth state and token from localStorage for secure verification
-  const isAuthenticated = isAuth || !!localStorage.getItem("token");
-
-  if (!isAuthenticated) {
+  if (!isAuth) {
     return <Navigate to="/login" replace={true} />;
   }
 
