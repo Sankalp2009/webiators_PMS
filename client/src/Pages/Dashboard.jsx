@@ -37,7 +37,7 @@ import SecurityIcon from '@mui/icons-material/Security';
 import { toast } from 'react-toastify';
 import { GlobalInfo } from '../Context/GlobalInfo.jsx';
 import { useProducts } from '../Context/ProductContext';
-import AdminSidebar from '../Components/Layout/AdminSidebar';
+import AdminSidebar from '../Components/layout/AdminSidebar.jsx';
 import ProductForm from '../Components/products/ProductForm.jsx';
 
 const DRAWER_WIDTH = 280;

@@ -6,7 +6,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import { GlobalInfo } from '../Context/GlobalInfo.jsx';
-import ProductCard from "../Components/Products/ProductCard.jsx";
+import ProductCard from "../Components/products/ProductCard.jsx";
 
 const Home = () => {
   const { isAuth } = useContext(GlobalInfo);

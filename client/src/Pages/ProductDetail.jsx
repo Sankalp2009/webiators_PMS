@@ -23,7 +23,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import { useProducts } from "../Context/ProductContext";
-import ImageGallery from "../Components/Products/ImageGallery.jsx";
+import ImageGallery from "../Components/products/ImageGallery.jsx";
 
 const ProductDetail = () => {
   const { slug } = useParams();
