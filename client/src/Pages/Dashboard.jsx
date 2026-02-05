@@ -248,16 +248,6 @@ const Dashboard = () => {
                           </Typography>
                         )}
                       </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{ display: { xs: "none", sm: "table-cell" } }}
-                      >
-                        <Chip
-                          label={product.stock}
-                          size="small"
-                          color={product.stock > 0 ? "success" : "error"}
-                        />
-                      </TableCell>
                       <TableCell align="right">
                         <Box
                           className="action-buttons"
