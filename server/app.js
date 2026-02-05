@@ -8,26 +8,21 @@ import morgan from "morgan";
 import ProductRouter from "./Routes/productRoutes.js";
 import userRoutes from "./Routes/userRoutes.js";
 import { generalLimiter, strictLimiter } from "./Utils/rateLimiter.js";
-import dotenv from "dotenv";
-dotenv.config({ path: "./config.env" });
+
 const app = express();
 
 app.set("trust proxy", 1);
 
 app.use(compression());
 
-
-app.use(cors({origin:"https://webiators-pms.vercel.app"}));
+app.use(cors({ origin: "https://webiators-pms.vercel.app" }));
 
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 app.use(cookieParser());
 
-app.use(
-  helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" },
-  }),
-);
+app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
+
 app.use(hpp());
 
 // Logging
