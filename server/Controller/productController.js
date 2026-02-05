@@ -11,7 +11,7 @@ export const getAllProduct = async (req, res) => {
     return res.status(200).json({
       status: "success",
       results: products.length,
-      products,
+      data: products,
     });
   } catch (error) {
     console.error("getAllProduct error:", error);
@@ -41,10 +41,17 @@ export const getProductById = async (req, res) => {
 
     return res.status(200).json({
       status: "success",
-      product,
+      data: product,
     });
   } catch (error) {
     console.error("getProductById error:", error);
+    // Handle invalid ObjectId format
+    if (error.kind === "ObjectId") {
+      return res.status(400).json({
+        status: "fail",
+        message: "Invalid product ID format",
+      });
+    }
     return res.status(500).json({
       status: "error",
       message: "Failed to fetch product",
@@ -64,7 +71,7 @@ export const createProduct = async (req, res) => {
 
     // Add createdBy to all products from authenticated user
     const userId = req.user._id || req.user.id;
-    
+
     products = products.map((product) => ({
       ...product,
       createdBy: userId,
@@ -176,7 +183,6 @@ export const updateProduct = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
 
-   
     if (updates.description) {
       try {
         const { content, isValid, errors } = processRichText(
@@ -237,10 +243,18 @@ export const updateProduct = async (req, res) => {
     return res.status(200).json({
       status: "success",
       message: "Product updated successfully",
-      product: updatedProduct,
+      data: updatedProduct,
     });
   } catch (error) {
     console.error("updateProduct error:", error);
+
+    // Handle invalid ObjectId format
+    if (error.kind === "ObjectId") {
+      return res.status(400).json({
+        status: "fail",
+        message: "Invalid product ID format",
+      });
+    }
 
     if (error.code === 11000) {
       return res.status(400).json({
