@@ -7,6 +7,7 @@ import {
   Button,
   Chip,
   Grid,
+  Flex,
   List,
   ListItem,
   ListItemIcon,
@@ -37,7 +38,7 @@ const ProductDetail = () => {
           setProduct(foundProduct);
         }
       } catch (error) {
-        console.error('Error loading product:', error);
+        console.error("Error loading product:", error);
       } finally {
         setLoading(false);
       }
@@ -48,7 +49,14 @@ const ProductDetail = () => {
 
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "90vh" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "90vh",
+        }}
+      >
         <CircularProgress />
       </Box>
     );
@@ -84,19 +92,21 @@ const ProductDetail = () => {
   ];
 
   // Transform galleryImages to simple array for ImageGallery component
-  const images = product.galleryImages?.map(img => img.url) || [];
+  const images = product.galleryImages?.map((img) => img.url) || [];
 
   return (
     <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
       {/* Header with Back Button - Full Width */}
-      <Box sx={{ 
-        bgcolor: "background.paper", 
-        borderBottom: 1, 
-        borderColor: "divider",
-        position: "sticky",
-        top: 0,
-        zIndex: 100,
-      }}>
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          borderBottom: 1,
+          borderColor: "divider",
+          position: "sticky",
+          top: 0,
+          zIndex: 100,
+        }}
+      >
         <Container maxWidth="xl" sx={{ py: 2 }}>
           <Button
             component={Link}
@@ -111,13 +121,13 @@ const ProductDetail = () => {
 
       {/* Main Content - Two Column Layout */}
       <Container maxWidth="xl" sx={{ py: 6 }}>
-        <Grid container spacing={6}>
+        <Grid container spacing={2} columns={16}>
           {/* LEFT COLUMN - Image Gallery (5/12 width) */}
           <Grid item xs={12} md={5}>
-            <Box 
-              className="slide-up" 
-              sx={{ 
-                position: "sticky", 
+            <Box
+              className="slide-up"
+              sx={{
+                position: "sticky",
                 top: 100,
                 height: "fit-content",
               }}
@@ -128,44 +138,54 @@ const ProductDetail = () => {
 
           {/* RIGHT COLUMN - Product Info (7/12 width) */}
           <Grid item xs={12} md={7}>
-            <Box 
-              className="slide-up" 
-              sx={{ 
+            <Box
+              className="slide-up"
+              sx={{
                 animationDelay: "0.1s",
                 pl: { md: 4 }, // Extra padding on desktop for better spacing
               }}
             >
               {/* Category Badge */}
-              <Chip 
-                label={product.category || "Product"} 
-                size="small" 
-                sx={{ 
-                  mb: 2, 
+              <Chip
+                label={product.category || "Product"}
+                size="small"
+                sx={{
+                  mb: 2,
                   width: "fit-content",
                   fontWeight: 600,
                   fontSize: 11,
                   letterSpacing: 0.5,
                   textTransform: "uppercase",
-                }} 
+                }}
               />
 
               {/* Title */}
-              <Typography 
-                variant="h2" 
-                fontWeight={700} 
-                sx={{ 
-                  mb: 3, 
+              <Typography
+                variant="h2"
+                fontWeight={700}
+                sx={{
+                  mb: 3,
                   lineHeight: 1.2,
                   letterSpacing: -0.5,
-                  fontSize: { xs: 28, sm: 36, md: 40 }
+                  fontSize: { xs: 28, sm: 36, md: 40 },
                 }}
               >
                 {product.productName}
               </Typography>
 
               {/* Price Section */}
-              <Box sx={{ mb: 4, pb: 3, borderBottom: 1, borderColor: "divider" }}>
-                <Box sx={{ display: "flex", alignItems: "baseline", gap: 2, flexWrap: "wrap", mb: 2 }}>
+              <Box
+                sx={{ mb: 4, pb: 3, borderBottom: 1, borderColor: "divider" }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "baseline",
+                    gap: 2,
+                    flexWrap: "wrap",
+                    mb: 2,
+                  }}
+                >
                   {hasDiscount ? (
                     <>
                       <Typography
@@ -206,55 +226,23 @@ const ProductDetail = () => {
                     </Typography>
                   )}
                 </Box>
-
-                {/* Stock Status */}
-                <Box sx={{ mt: 2 }}>
-                  {product.stock > 0 ? (
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                      <Box
-                        sx={{
-                          width: 10,
-                          height: 10,
-                          borderRadius: "50%",
-                          bgcolor: "success.main",
-                          boxShadow: "0 0 0 3px rgba(76, 175, 80, 0.1)",
-                        }}
-                      />
-                      <Typography
-                        variant="body2"
-                        color="success.main"
-                        fontWeight={600}
-                      >
-                        In Stock • {product.stock} available
-                      </Typography>
-                    </Box>
-                  ) : (
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-                      <Box
-                        sx={{
-                          width: 10,
-                          height: 10,
-                          borderRadius: "50%",
-                          bgcolor: "error.main",
-                          boxShadow: "0 0 0 3px rgba(244, 67, 54, 0.1)",
-                        }}
-                      />
-                      <Typography variant="body2" color="error.main" fontWeight={600}>
-                        Out of Stock
-                      </Typography>
-                    </Box>
-                  )}
-                </Box>
               </Box>
 
               {/* Actions */}
-              <Box sx={{ display: "flex", gap: 2, mb: 5, flexWrap: { xs: "wrap", sm: "nowrap" } }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 2,
+                  mb: 5,
+                  flexWrap: { xs: "wrap", sm: "nowrap" },
+                }}
+              >
                 <Button
                   variant="contained"
                   size="large"
                   startIcon={<ShoppingCartIcon />}
                   disabled={product.stock === 0}
-                  sx={{ 
+                  sx={{
                     flex: { xs: "1 1 100%", sm: 1 },
                     py: 1.75,
                     fontSize: 16,
@@ -265,10 +253,10 @@ const ProductDetail = () => {
                 >
                   Add to Cart
                 </Button>
-                <Button 
-                  variant="outlined" 
-                  size="large" 
-                  sx={{ 
+                <Button
+                  variant="outlined"
+                  size="large"
+                  sx={{
                     px: 3,
                     py: 1.75,
                     borderRadius: 1,
@@ -280,17 +268,21 @@ const ProductDetail = () => {
               </Box>
 
               {/* Features */}
-              <Box sx={{ mb: 5, pb: 4, borderBottom: 1, borderColor: "divider" }}>
+              <Box
+                sx={{ mb: 5, pb: 4, borderBottom: 1, borderColor: "divider" }}
+              >
                 <List disablePadding>
                   {features.map((feature, index) => (
-                    <ListItem 
-                      key={index} 
-                      sx={{ 
-                        px: 0, 
+                    <ListItem
+                      key={index}
+                      sx={{
+                        px: 0,
                         py: 1.5,
                       }}
                     >
-                      <ListItemIcon sx={{ minWidth: 44, color: "primary.main" }}>
+                      <ListItemIcon
+                        sx={{ minWidth: 44, color: "primary.main" }}
+                      >
                         <feature.icon />
                       </ListItemIcon>
                       <ListItemText
@@ -308,15 +300,15 @@ const ProductDetail = () => {
 
               {/* Description */}
               <Box>
-                <Typography 
-                  variant="h6" 
-                  fontWeight={700} 
+                <Typography
+                  variant="h6"
+                  fontWeight={700}
                   sx={{ mb: 2.5, fontSize: 18 }}
                 >
                   About This Product
                 </Typography>
                 <Box
-                  sx={{ 
+                  sx={{
                     color: "text.secondary",
                     lineHeight: 1.8,
                     fontSize: 15,
