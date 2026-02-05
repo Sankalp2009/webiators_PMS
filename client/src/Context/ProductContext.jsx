@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { productAPI } from "../Utils/Api.js";
-import { GlobalInfo } from "./GlobalInfo.jsx"; 
+import { GlobalInfo } from "./GlobalInfo.jsx";
 
 const ProductContext = createContext();
 
@@ -14,7 +14,7 @@ export const useProducts = () => {
 };
 
 export const ProductProvider = ({ children }) => {
-  const { isAuth } = useContext(GlobalInfo); 
+  const { isAuth } = useContext(GlobalInfo);
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -35,11 +35,10 @@ export const ProductProvider = ({ children }) => {
     }
   };
 
- 
   useEffect(() => {
-  if (!isAuth) return;
-  fetchProducts();
-}, [isAuth])
+    if (!isAuth) return;
+    fetchProducts();
+  }, [isAuth]);
 
   const getProductBySlug = (slug) => {
     return products.find((product) => product.slug === slug);
@@ -71,8 +70,6 @@ export const ProductProvider = ({ children }) => {
           url,
           alt: productData.name,
         })),
-        category: productData.category,
-        stock: productData.stock,
         isActive: true,
       };
 
@@ -103,8 +100,6 @@ export const ProductProvider = ({ children }) => {
           url,
           alt: productData.name,
         })),
-        category: productData.category,
-        stock: productData.stock,
       };
 
       const data = await productAPI.updateProduct(id, apiData);
@@ -120,15 +115,17 @@ export const ProductProvider = ({ children }) => {
 
   const deleteProduct = async (id) => {
     try {
-      setLoading(true);
       setError(null);
+      // Optimistic update - remove from UI immediately
+      setProducts((prevProducts) => prevProducts.filter((p) => p._id !== id));
+
+      // Delete from server
       await productAPI.deleteProduct(id);
-      await fetchProducts();
     } catch (err) {
       setError(err.response?.data?.message || "Failed to delete product");
+      // Re-fetch on error to restore the deleted item
+      await fetchProducts();
       throw err;
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -145,9 +142,7 @@ export const ProductProvider = ({ children }) => {
   };
 
   return (
-    <ProductContext.Provider value={value}>
-      {children}
-    </ProductContext.Provider>
+    <ProductContext.Provider value={value}>{children}</ProductContext.Provider>
   );
 };
 

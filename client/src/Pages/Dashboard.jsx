@@ -56,8 +56,6 @@ const Dashboard = () => {
       price: product.price,
       discountedPrice: product.discountedPrice,
       description: product.description,
-      category: product.category,
-      stock: product.stock,
     };
     setEditingProduct(formData);
     setIsFormOpen(true);
@@ -173,12 +171,6 @@ const Dashboard = () => {
                   <TableRow sx={{ bgcolor: "primary.light" }}>
                     <TableCell width={70}>Image</TableCell>
                     <TableCell sx={{ minWidth: 200 }}>Product</TableCell>
-                    <TableCell
-                      align="center"
-                      sx={{ display: { xs: "none", md: "table-cell" } }}
-                    >
-                      Category
-                    </TableCell>
                     <TableCell align="right" sx={{ minWidth: 100 }}>
                       Price
                     </TableCell>
@@ -214,16 +206,6 @@ const Dashboard = () => {
                         <Typography variant="caption" color="text.secondary">
                           /{product.slug}
                         </Typography>
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{ display: { xs: "none", md: "table-cell" } }}
-                      >
-                        <Chip
-                          label={product.category}
-                          size="small"
-                          variant="outlined"
-                        />
                       </TableCell>
                       <TableCell align="right">
                         <Box>
@@ -300,7 +282,7 @@ const Dashboard = () => {
                   {products.length === 0 && (
                     <TableRow>
                       <TableCell
-                        colSpan={5}
+                        colSpan={4}
                         sx={{ textAlign: "center", py: 6 }}
                       >
                         <InventoryIcon

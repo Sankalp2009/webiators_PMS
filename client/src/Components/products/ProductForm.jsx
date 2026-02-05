@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import {
   Box,
   TextField,
@@ -8,15 +8,15 @@ import {
   Typography,
   IconButton,
   CircularProgress,
-} from '@mui/material';
+} from "@mui/material";
 
-import { useProducts} from '../../Context/ProductContext.jsx'
+import { useProducts } from "../../Context/ProductContext.jsx";
 
-import SaveIcon from '@mui/icons-material/Save';
-import CloseIcon from '@mui/icons-material/Close';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { toast } from 'react-toastify';
+import SaveIcon from "@mui/icons-material/Save";
+import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { toast } from "react-toastify";
 
 const ProductForm = ({ product, onClose }) => {
   const navigate = useNavigate();
@@ -24,15 +24,13 @@ const ProductForm = ({ product, onClose }) => {
   const isEditing = !!product;
 
   const [formData, setFormData] = useState({
-    metaTitle: product?.metaTitle || '',
-    name: product?.name || '',
-    slug: product?.slug || '',
-    images: product?.images || [''],
-    price: product?.price?.toString() || '',
-    discountedPrice: product?.discountedPrice?.toString() || '',
-    description: product?.description || '',
-    category: product?.category || '',
-    stock: product?.stock?.toString() || '',
+    metaTitle: product?.metaTitle || "",
+    name: product?.name || "",
+    slug: product?.slug || "",
+    images: product?.images || [""],
+    price: product?.price?.toString() || "",
+    discountedPrice: product?.discountedPrice?.toString() || "",
+    description: product?.description || "",
   });
 
   const [errors, setErrors] = useState({});
@@ -41,8 +39,8 @@ const ProductForm = ({ product, onClose }) => {
   const generateSlug = (name) => {
     return name
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
   };
 
   useEffect(() => {
@@ -55,51 +53,44 @@ const ProductForm = ({ product, onClose }) => {
     const newErrors = {};
 
     if (!formData.metaTitle.trim()) {
-      newErrors.metaTitle = 'Meta title is required';
+      newErrors.metaTitle = "Meta title is required";
     } else if (formData.metaTitle.length > 60) {
-      newErrors.metaTitle = 'Meta title must be under 60 characters';
+      newErrors.metaTitle = "Meta title must be under 60 characters";
     }
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Product name is required';
+      newErrors.name = "Product name is required";
     }
 
     if (!formData.slug.trim()) {
-      newErrors.slug = 'URL slug is required';
+      newErrors.slug = "URL slug is required";
     } else if (!/^[a-z0-9-]+$/.test(formData.slug)) {
-      newErrors.slug = 'Slug can only contain lowercase letters, numbers, and hyphens';
+      newErrors.slug =
+        "Slug can only contain lowercase letters, numbers, and hyphens";
     }
 
     const validImages = formData.images.filter((img) => img.trim());
     if (validImages.length === 0) {
-      newErrors.images = 'At least one image URL is required';
+      newErrors.images = "At least one image URL is required";
     }
 
     const price = parseFloat(formData.price);
     if (!formData.price || isNaN(price) || price <= 0) {
-      newErrors.price = 'Valid price is required';
+      newErrors.price = "Valid price is required";
     }
 
     if (formData.discountedPrice) {
       const discounted = parseFloat(formData.discountedPrice);
       if (isNaN(discounted) || discounted <= 0) {
-        newErrors.discountedPrice = 'Invalid discounted price';
+        newErrors.discountedPrice = "Invalid discounted price";
       } else if (discounted >= price) {
-        newErrors.discountedPrice = 'Discounted price must be less than regular price';
+        newErrors.discountedPrice =
+          "Discounted price must be less than regular price";
       }
     }
 
     if (!formData.description.trim()) {
-      newErrors.description = 'Description is required';
-    }
-
-    if (!formData.category.trim()) {
-      newErrors.category = 'Category is required';
-    }
-
-    const stock = parseInt(formData.stock);
-    if (!formData.stock || isNaN(stock) || stock < 0) {
-      newErrors.stock = 'Valid stock quantity is required';
+      newErrors.description = "Description is required";
     }
 
     setErrors(newErrors);
@@ -110,7 +101,7 @@ const ProductForm = ({ product, onClose }) => {
     e.preventDefault();
 
     if (!validateForm()) {
-      toast.error('Please fix the form errors');
+      toast.error("Please fix the form errors");
       return;
     }
 
@@ -127,25 +118,23 @@ const ProductForm = ({ product, onClose }) => {
           ? parseFloat(formData.discountedPrice)
           : undefined,
         description: formData.description.trim(),
-        category: formData.category.trim(),
-        stock: parseInt(formData.stock),
       };
 
       if (isEditing && product) {
         await updateProduct(product.id, productData);
-        toast.success('Product updated successfully');
+        toast.success("Product updated successfully");
       } else {
         await addProduct(productData);
-        toast.success('Product created successfully');
+        toast.success("Product created successfully");
       }
 
       if (onClose) {
         onClose();
       } else {
-        navigate('/dashboard');
+        navigate("/dashboard");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to save product');
+      toast.error(error.response?.data?.message || "Failed to save product");
     } finally {
       setLoading(false);
     }
@@ -158,7 +147,7 @@ const ProductForm = ({ product, onClose }) => {
   };
 
   const addImageField = () => {
-    setFormData((prev) => ({ ...prev, images: [...prev.images, ''] }));
+    setFormData((prev) => ({ ...prev, images: [...prev.images, ""] }));
   };
 
   const removeImageField = (index) => {
@@ -175,10 +164,15 @@ const ProductForm = ({ product, onClose }) => {
         fullWidth
         label="Meta Title *"
         value={formData.metaTitle}
-        onChange={(e) => setFormData((prev) => ({ ...prev, metaTitle: e.target.value }))}
+        onChange={(e) =>
+          setFormData((prev) => ({ ...prev, metaTitle: e.target.value }))
+        }
         placeholder="SEO-optimized title (max 60 characters)"
         error={!!errors.metaTitle}
-        helperText={errors.metaTitle || `Used for SEO and browser tabs (${formData.metaTitle.length}/60)`}
+        helperText={
+          errors.metaTitle ||
+          `Used for SEO and browser tabs (${formData.metaTitle.length}/60)`
+        }
         margin="normal"
         disabled={loading}
       />
@@ -188,7 +182,9 @@ const ProductForm = ({ product, onClose }) => {
         fullWidth
         label="Product Name *"
         value={formData.name}
-        onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+        onChange={(e) =>
+          setFormData((prev) => ({ ...prev, name: e.target.value }))
+        }
         placeholder="Enter product name"
         error={!!errors.name}
         helperText={errors.name}
@@ -201,7 +197,9 @@ const ProductForm = ({ product, onClose }) => {
         fullWidth
         label="URL Slug *"
         value={formData.slug}
-        onChange={(e) => setFormData((prev) => ({ ...prev, slug: e.target.value }))}
+        onChange={(e) =>
+          setFormData((prev) => ({ ...prev, slug: e.target.value }))
+        }
         placeholder="product-url-slug"
         error={!!errors.slug}
         helperText={errors.slug}
@@ -215,7 +213,7 @@ const ProductForm = ({ product, onClose }) => {
           Gallery Images *
         </Typography>
         {formData.images.map((image, index) => (
-          <Box key={index} sx={{ display: 'flex', gap: 1, mb: 1 }}>
+          <Box key={index} sx={{ display: "flex", gap: 1, mb: 1 }}>
             <TextField
               fullWidth
               size="small"
@@ -259,9 +257,11 @@ const ProductForm = ({ product, onClose }) => {
             fullWidth
             label="Price ($) *"
             type="number"
-            inputProps={{ step: '0.01' }}
+            inputProps={{ step: "0.01" }}
             value={formData.price}
-            onChange={(e) => setFormData((prev) => ({ ...prev, price: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, price: e.target.value }))
+            }
             placeholder="0.00"
             error={!!errors.price}
             helperText={errors.price}
@@ -274,43 +274,17 @@ const ProductForm = ({ product, onClose }) => {
             fullWidth
             label="Discounted Price ($)"
             type="number"
-            inputProps={{ step: '0.01' }}
+            inputProps={{ step: "0.01" }}
             value={formData.discountedPrice}
-            onChange={(e) => setFormData((prev) => ({ ...prev, discountedPrice: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                discountedPrice: e.target.value,
+              }))
+            }
             placeholder="0.00"
             error={!!errors.discountedPrice}
             helperText={errors.discountedPrice}
-            margin="normal"
-            disabled={loading}
-          />
-        </Grid>
-      </Grid>
-
-      {/* Category and Stock */}
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <TextField
-            fullWidth
-            label="Category *"
-            value={formData.category}
-            onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
-            placeholder="e.g., Electronics"
-            error={!!errors.category}
-            helperText={errors.category}
-            margin="normal"
-            disabled={loading}
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            fullWidth
-            label="Stock Quantity *"
-            type="number"
-            value={formData.stock}
-            onChange={(e) => setFormData((prev) => ({ ...prev, stock: e.target.value }))}
-            placeholder="0"
-            error={!!errors.stock}
-            helperText={errors.stock}
             margin="normal"
             disabled={loading}
           />
@@ -324,16 +298,20 @@ const ProductForm = ({ product, onClose }) => {
         multiline
         rows={4}
         value={formData.description}
-        onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+        onChange={(e) =>
+          setFormData((prev) => ({ ...prev, description: e.target.value }))
+        }
         placeholder="Enter product description (supports HTML for rich text)"
         error={!!errors.description}
-        helperText={errors.description || 'You can use HTML tags for formatting'}
+        helperText={
+          errors.description || "You can use HTML tags for formatting"
+        }
         margin="normal"
         disabled={loading}
       />
 
       {/* Actions */}
-      <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
+      <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
         <Button
           type="submit"
           variant="contained"
@@ -341,12 +319,16 @@ const ProductForm = ({ product, onClose }) => {
           sx={{ flex: 1 }}
           disabled={loading}
         >
-          {loading ? 'Saving...' : isEditing ? 'Update Product' : 'Create Product'}
+          {loading
+            ? "Saving..."
+            : isEditing
+              ? "Update Product"
+              : "Create Product"}
         </Button>
         <Button
           variant="outlined"
           startIcon={<CloseIcon />}
-          onClick={() => (onClose ? onClose() : navigate('/dashboard'))}
+          onClick={() => (onClose ? onClose() : navigate("/dashboard"))}
           disabled={loading}
         >
           Cancel
