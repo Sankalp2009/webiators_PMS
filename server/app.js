@@ -8,31 +8,40 @@ import morgan from "morgan";
 import ProductRouter from "./Routes/productRoutes.js";
 import userRoutes from "./Routes/userRoutes.js";
 import { generalLimiter, strictLimiter } from "./Utils/rateLimiter.js";
+
 const app = express();
 
+// Trust proxy for Render (for correct IP detection)
 app.set("trust proxy", 1);
-
-// Security middleware
-app.use(helmet({
-  contentSecurityPolicy: false
-}));
-
-
-// Prevent HTTP Parameter Pollution
-app.use(hpp());
 
 app.use(compression());
 
-app.use(cookieParser());
-
-
-// CORS configuration
+// ✅ Optimized CORS
 app.use(
   cors({
-    origin: "http://localhost:5173", // Your frontend URL
+    origin:
+      process.env.NODE_ENV === "production"
+        ? "https://webiators-pms.vercel.app/"
+        : "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
+    optionsSuccessStatus: 200,
   })
 );
+
+// ✅ Parsing middleware
+app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+app.use(cookieParser());
+
+// ✅ Security & clean parameters
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
+app.use(hpp());
+
 
 // Logging
 if(process.env.NODE_ENV === 'production') {
@@ -41,10 +50,6 @@ if(process.env.NODE_ENV === 'production') {
   app.use(morgan('dev'));
 }
 
-// Body parsing
-app.use(express.json({ limit: "10kb" }));
-
-app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
 app.get("/health", (req, res) => {
   res.json({ 
