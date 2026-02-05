@@ -16,19 +16,42 @@ app.set("trust proxy", 1);
 
 app.use(compression());
 
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      "http://localhost:5173",
+      "https://webiators-pms.vercel.app"
+    ];
+    
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 86400
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 
-app.use(
-  cors({
-    origin:
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:5173" : "https://webiators-pms.vercel.app",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-    maxAge: 86400,
-  }),
-);
+// app.use(
+//   cors({
+//     origin:
+//       process.env.NODE_ENV === "development"
+//         ? "http://localhost:5173" : "https://webiators-pms.vercel.app",
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//     credentials: true,
+//     maxAge: 86400,
+//   }),
+// );
 
 
 app.use(express.json({ limit: "10kb" }));
