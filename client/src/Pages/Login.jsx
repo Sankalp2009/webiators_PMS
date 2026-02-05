@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router";
 import {
   Box,
@@ -27,33 +27,27 @@ const Login = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (isAuth) {
-      navigate("/dashboard");
-    }
-  }, [isAuth, navigate]);
-
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
+    e.preventDefault();
+    setIsLoading(true);
 
-  if (!formData.email || !formData.password) {
-    toast.error("Please fill in all fields");
+    if (!formData.email || !formData.password) {
+      toast.error("Please fill in all fields");
+      setIsLoading(false);
+      return;
+    }
+
+    const result = await login(formData.email, formData.password);
+
+    if (result.success) {
+      toast.success(result.message || "Login successful");
+      navigate("/dashboard");
+    } else {
+      toast.error(result.message);
+    }
+
     setIsLoading(false);
-    return;
-  }
-
-  const result = await login(formData.email, formData.password);
-
-  if (result.success) {
-    toast.success(result.message || "Login successful");
-    navigate("/dashboard");
-  } else {
-    toast.error(result.message); 
-  }
-
-  setIsLoading(false);
-};
+  };
 
   return (
     <Box
