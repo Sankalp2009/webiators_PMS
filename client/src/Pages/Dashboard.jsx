@@ -7,7 +7,6 @@ import {
   Typography,
   Button,
   IconButton,
-  Drawer,
   Table,
   TableBody,
   TableCell,
@@ -34,23 +33,17 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import InventoryIcon from "@mui/icons-material/Inventory";
-import MenuIcon from "@mui/icons-material/Menu";
 import SecurityIcon from "@mui/icons-material/Security";
 import { toast } from "react-toastify";
-import { GlobalInfo } from "../Context/GlobalInfo.jsx";
 import { useProducts } from "../Context/ProductContext";
-
-const DRAWER_WIDTH = 280;
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
   const { products, loading, deleteProduct } = useProducts();
- console.log(products);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(undefined);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleEdit = (product) => {
     // Transform product data from API format to form format
@@ -96,8 +89,6 @@ const Dashboard = () => {
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
-     
-
       {/* Main Content */}
       <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
         {/* Header */}
@@ -111,14 +102,6 @@ const Dashboard = () => {
           }}
         >
           <Toolbar>
-            <IconButton
-              color="inherit"
-              edge="start"
-              onClick={() => setMobileOpen(true)}
-              sx={{ mr: 2, display: { md: "none" } }}
-            >
-              <MenuIcon />
-            </IconButton>
             <SecurityIcon color="primary" sx={{ mr: 1 }} />
             <Typography variant="h6" fontWeight={600} sx={{ flex: 1 }}>
               Admin Dashboard
@@ -187,11 +170,21 @@ const Dashboard = () => {
             <TableContainer component={Paper}>
               <Table>
                 <TableHead>
-                  <TableRow>
-                    <TableCell width={80}>Image</TableCell>
-                    <TableCell>Product</TableCell>
-                    <TableCell align="right">Price</TableCell>
-                    <TableCell align="right">Actions</TableCell>
+                  <TableRow sx={{ bgcolor: "primary.light" }}>
+                    <TableCell width={70}>Image</TableCell>
+                    <TableCell sx={{ minWidth: 200 }}>Product</TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{ display: { xs: "none", md: "table-cell" } }}
+                    >
+                      Category
+                    </TableCell>
+                    <TableCell align="right" sx={{ minWidth: 100 }}>
+                      Price
+                    </TableCell>
+                    <TableCell align="right" sx={{ minWidth: 150 }}>
+                      Actions
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -200,7 +193,10 @@ const Dashboard = () => {
                       key={product._id}
                       hover
                       sx={{
-                        "&:hover .action-buttons": { opacity: 1 },
+                        transition: "background-color 0.2s",
+                        "&:hover": {
+                          bgcolor: "action.hover",
+                        },
                       }}
                     >
                       <TableCell>
@@ -208,7 +204,7 @@ const Dashboard = () => {
                           variant="rounded"
                           src={product.galleryImages?.[0]?.url}
                           alt={product.productName}
-                          sx={{ width: 48, height: 48 }}
+                          sx={{ width: 48, height: 48, objectFit: "cover" }}
                         />
                       </TableCell>
                       <TableCell>
@@ -220,61 +216,80 @@ const Dashboard = () => {
                         </Typography>
                       </TableCell>
                       <TableCell
+                        align="center"
                         sx={{ display: { xs: "none", md: "table-cell" } }}
                       >
-                        <Chip label={product.category} size="small" />
+                        <Chip
+                          label={product.category}
+                          size="small"
+                          variant="outlined"
+                        />
                       </TableCell>
                       <TableCell align="right">
-                        {product.discountedPrice ? (
-                          <Box>
-                            <Typography
-                              variant="body2"
-                              fontWeight={600}
-                              color="warning.main"
-                            >
-                              ${product.discountedPrice.toFixed(2)}
-                            </Typography>
-                            <Typography
-                              variant="caption"
-                              color="text.secondary"
-                              sx={{ textDecoration: "line-through" }}
-                            >
+                        <Box>
+                          {product.discountedPrice ? (
+                            <>
+                              <Typography
+                                variant="body2"
+                                fontWeight={700}
+                                color="success.main"
+                              >
+                                ${product.discountedPrice.toFixed(2)}
+                              </Typography>
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                                sx={{ textDecoration: "line-through" }}
+                              >
+                                ${product.price.toFixed(2)}
+                              </Typography>
+                            </>
+                          ) : (
+                            <Typography variant="body2" fontWeight={600}>
                               ${product.price.toFixed(2)}
                             </Typography>
-                          </Box>
-                        ) : (
-                          <Typography variant="body2" fontWeight={500}>
-                            ${product.price.toFixed(2)}
-                          </Typography>
-                        )}
+                          )}
+                        </Box>
                       </TableCell>
                       <TableCell align="right">
                         <Box
-                          className="action-buttons"
                           sx={{
-                            opacity: { xs: 1, md: 0 },
-                            transition: "opacity 0.2s",
                             display: "flex",
                             justifyContent: "flex-end",
-                            gap: 0.5,
+                            gap: 0.75,
+                            alignItems: "center",
                           }}
                         >
                           <IconButton
                             size="small"
+                            title="View"
                             onClick={() => navigate(`/product/${product.slug}`)}
+                            sx={{
+                              color: "primary.main",
+                              "&:hover": { bgcolor: "primary.light" },
+                            }}
                           >
                             <VisibilityIcon fontSize="small" />
                           </IconButton>
                           <IconButton
                             size="small"
+                            title="Edit"
                             onClick={() => handleEdit(product)}
+                            sx={{
+                              color: "info.main",
+                              "&:hover": { bgcolor: "info.light" },
+                            }}
                           >
                             <EditIcon fontSize="small" />
                           </IconButton>
                           <IconButton
                             size="small"
+                            title="Delete"
                             color="error"
                             onClick={() => setDeleteConfirmId(product._id)}
+                            sx={{
+                              "&:hover": { bgcolor: "error.light" },
+                            }}
                           >
                             <DeleteIcon fontSize="small" />
                           </IconButton>
@@ -285,7 +300,7 @@ const Dashboard = () => {
                   {products.length === 0 && (
                     <TableRow>
                       <TableCell
-                        colSpan={6}
+                        colSpan={5}
                         sx={{ textAlign: "center", py: 6 }}
                       >
                         <InventoryIcon
