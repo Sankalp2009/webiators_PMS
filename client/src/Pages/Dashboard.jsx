@@ -96,34 +96,7 @@ const Dashboard = () => {
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
-      {/* Sidebar */}
-      <Box
-        component="nav"
-        sx={{ width: { md: DRAWER_WIDTH }, flexShrink: { md: 0 } }}
-      >
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={() => setMobileOpen(false)}
-          ModalProps={{ keepMounted: true }}
-          sx={{
-            display: { xs: "block", md: "none" },
-            "& .MuiDrawer-paper": { width: DRAWER_WIDTH },
-          }}
-        >
-          <AdminSidebar />
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: "none", md: "block" },
-            "& .MuiDrawer-paper": { width: DRAWER_WIDTH },
-          }}
-          open
-        >
-          <AdminSidebar />
-        </Drawer>
-      </Box>
+     
 
       {/* Main Content */}
       <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
