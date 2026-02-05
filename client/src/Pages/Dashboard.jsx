@@ -38,7 +38,7 @@ import { toast } from 'react-toastify';
 import { GlobalInfo } from '../Context/GlobalInfo.jsx';
 import { useProducts } from '../Context/ProductContext';
 import AdminSidebar from '../Components/Layout/AdminSidebar';
-import ProductForm from '../Components/Products/ProductForm';
+import ProductForm from '../Components/products/ProductForm.jsx';
 
 const DRAWER_WIDTH = 280;
 
