@@ -16,19 +16,21 @@ app.set("trust proxy", 1);
 
 app.use(compression());
 
-// ✅ Optimized CORS
-app.use(
-  cors({
-    origin:
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:5173"
-        : "https://webiators-pms.vercel.app",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-    maxAge: 86400,
-  }),
-);
+
+app.use(cors());
+
+// app.use(
+//   cors({
+//     origin:
+//       process.env.NODE_ENV === "development"
+//         ? "http://localhost:5173"
+//         : "https://webiators-pms.vercel.app",
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//     credentials: true,
+//     maxAge: 86400,
+//   }),
+// );
 
 // ✅ Parsing middleware
 app.use(express.json({ limit: "10kb" }));
