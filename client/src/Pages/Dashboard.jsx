@@ -89,9 +89,35 @@ const Dashboard = () => {
   ];
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        bgcolor: "background.default",
+      }}
+    >
+      {/* Sidebar */}
+      <Box
+        sx={{
+          width: 280,
+          bgcolor: "background.paper",
+          borderRight: 1,
+          borderColor: "divider",
+          overflow: "auto",
+        }}
+      >
+        <AdminSidebar />
+      </Box>
+
       {/* Main Content */}
-      <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          overflow: "auto",
+        }}
+      >
         {/* Header */}
         <AppBar
           position="sticky"
@@ -100,14 +126,14 @@ const Dashboard = () => {
             bgcolor: "background.paper",
             borderBottom: 1,
             borderColor: "divider",
+            zIndex: 10,
           }}
         >
-          <Toolbar>
-            <SecurityIcon color="primary" sx={{ mr: 1 }} />
-            <Typography variant="h6" fontWeight={600} sx={{ flex: 1 }}>
+          <Toolbar sx={{ px: 3, py: 1 }}>
+            <SecurityIcon color="primary" sx={{ mr: 1.5, fontSize: 24 }} />
+            <Typography variant="h6" fontWeight={700} sx={{ flex: 1 }}>
               Admin Dashboard
             </Typography>
-            <Chip label="Admin" size="small" sx={{ mr: 2 }} />
             <Button
               variant="contained"
               startIcon={<AddIcon />}
@@ -115,6 +141,7 @@ const Dashboard = () => {
                 setEditingProduct(undefined);
                 setIsFormOpen(true);
               }}
+              sx={{ textTransform: "none", fontWeight: 600 }}
             >
               Add Product
             </Button>
@@ -122,33 +149,41 @@ const Dashboard = () => {
         </AppBar>
 
         {/* Content */}
-        <Box sx={{ p: 3, flex: 1, bgcolor: "background.default" }}>
+        <Box sx={{ p: 3, flex: 1, overflow: "auto" }}>
           {/* Stats */}
-          <Typography variant="h6" fontWeight={600} gutterBottom>
+          <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>
             Overview
           </Typography>
-          <Grid container spacing={3} sx={{ mb: 4 }}>
+          <Grid container spacing={2} sx={{ mb: 4 }}>
             {stats.map((stat, index) => (
               <Grid item xs={12} sm={4} key={index}>
-                <Card>
+                <Card sx={{ height: "100%", boxShadow: 1, borderRadius: 1 }}>
                   <CardContent
-                    sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                    sx={{ display: "flex", alignItems: "center", gap: 2, p: 2 }}
                   >
                     <Avatar
                       sx={{
                         bgcolor: stat.bgColor,
                         color: stat.color,
-                        width: 48,
-                        height: 48,
+                        width: 56,
+                        height: 56,
                       }}
                     >
                       <InventoryIcon />
                     </Avatar>
                     <Box>
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ fontSize: 12 }}
+                      >
                         {stat.label}
                       </Typography>
-                      <Typography variant="h4" fontWeight={700}>
+                      <Typography
+                        variant="h4"
+                        fontWeight={700}
+                        sx={{ mt: 0.5 }}
+                      >
                         {stat.value}
                       </Typography>
                     </Box>
@@ -159,7 +194,7 @@ const Dashboard = () => {
           </Grid>
 
           {/* Table */}
-          <Typography variant="h6" fontWeight={600} gutterBottom>
+          <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>
             Product Management
           </Typography>
 
@@ -168,16 +203,29 @@ const Dashboard = () => {
               <CircularProgress />
             </Box>
           ) : (
-            <TableContainer component={Paper}>
-              <Table>
+            <TableContainer
+              component={Paper}
+              sx={{ borderRadius: 1, boxShadow: 1 }}
+            >
+              <Table stickyHeader>
                 <TableHead>
-                  <TableRow sx={{ bgcolor: "primary.light" }}>
-                    <TableCell width={70}>Image</TableCell>
-                    <TableCell sx={{ minWidth: 200 }}>Product</TableCell>
-                    <TableCell align="right" sx={{ minWidth: 100 }}>
+                  <TableRow sx={{ bgcolor: "#f5f5f5" }}>
+                    <TableCell width={70} sx={{ fontWeight: 600 }}>
+                      Image
+                    </TableCell>
+                    <TableCell sx={{ minWidth: 200, fontWeight: 600 }}>
+                      Product
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      sx={{ minWidth: 100, fontWeight: 600 }}
+                    >
                       Price
                     </TableCell>
-                    <TableCell align="right" sx={{ minWidth: 150 }}>
+                    <TableCell
+                      align="right"
+                      sx={{ minWidth: 120, fontWeight: 600 }}
+                    >
                       Actions
                     </TableCell>
                   </TableRow>
@@ -190,27 +238,41 @@ const Dashboard = () => {
                       sx={{
                         transition: "background-color 0.2s",
                         "&:hover": {
-                          bgcolor: "action.hover",
+                          bgcolor: "#fafafa",
                         },
+                        height: 72,
                       }}
                     >
-                      <TableCell>
+                      <TableCell sx={{ py: 1 }}>
                         <Avatar
                           variant="rounded"
                           src={product.galleryImages?.[0]?.url}
                           alt={product.productName}
-                          sx={{ width: 48, height: 48, objectFit: "cover" }}
+                          sx={{
+                            width: 48,
+                            height: 48,
+                            objectFit: "cover",
+                            borderRadius: 0.5,
+                          }}
                         />
                       </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" fontWeight={500}>
+                      <TableCell sx={{ py: 1 }}>
+                        <Typography
+                          variant="body2"
+                          fontWeight={500}
+                          sx={{ mb: 0.5 }}
+                        >
                           {product.productName}
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{ display: "block" }}
+                        >
                           /{product.slug}
                         </Typography>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="right" sx={{ py: 1 }}>
                         <Box>
                           {product.discountedPrice ? (
                             <>
@@ -218,13 +280,17 @@ const Dashboard = () => {
                                 variant="body2"
                                 fontWeight={700}
                                 color="success.main"
+                                sx={{ mb: 0.25 }}
                               >
                                 ${product.discountedPrice.toFixed(2)}
                               </Typography>
                               <Typography
                                 variant="caption"
                                 color="text.secondary"
-                                sx={{ textDecoration: "line-through" }}
+                                sx={{
+                                  textDecoration: "line-through",
+                                  display: "block",
+                                }}
                               >
                                 ${product.price.toFixed(2)}
                               </Typography>
@@ -236,12 +302,12 @@ const Dashboard = () => {
                           )}
                         </Box>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align="right" sx={{ py: 1 }}>
                         <Box
                           sx={{
                             display: "flex",
                             justifyContent: "flex-end",
-                            gap: 0.75,
+                            gap: 0.5,
                             alignItems: "center",
                           }}
                         >
@@ -251,6 +317,7 @@ const Dashboard = () => {
                             onClick={() => navigate(`/product/${product.slug}`)}
                             sx={{
                               color: "primary.main",
+                              padding: "6px",
                               "&:hover": { bgcolor: "primary.light" },
                             }}
                           >
@@ -262,6 +329,7 @@ const Dashboard = () => {
                             onClick={() => handleEdit(product)}
                             sx={{
                               color: "info.main",
+                              padding: "6px",
                               "&:hover": { bgcolor: "info.light" },
                             }}
                           >
@@ -273,6 +341,7 @@ const Dashboard = () => {
                             color="error"
                             onClick={() => setDeleteConfirmId(product._id)}
                             sx={{
+                              padding: "6px",
                               "&:hover": { bgcolor: "error.light" },
                             }}
                           >
@@ -286,17 +355,17 @@ const Dashboard = () => {
                     <TableRow>
                       <TableCell
                         colSpan={4}
-                        sx={{ textAlign: "center", py: 6 }}
+                        sx={{ textAlign: "center", py: 8 }}
                       >
                         <InventoryIcon
-                          sx={{ fontSize: 48, color: "text.disabled", mb: 2 }}
+                          sx={{ fontSize: 56, color: "text.disabled", mb: 1 }}
                         />
-                        <Typography color="text.secondary">
+                        <Typography color="text.secondary" sx={{ mb: 2 }}>
                           No products yet
                         </Typography>
                         <Button
                           onClick={() => setIsFormOpen(true)}
-                          sx={{ mt: 1 }}
+                          variant="contained"
                         >
                           Add your first product
                         </Button>
@@ -316,18 +385,29 @@ const Dashboard = () => {
         onClose={handleFormClose}
         maxWidth="md"
         fullWidth
-        PaperProps={{ sx: { maxHeight: "90vh" } }}
+        PaperProps={{
+          sx: {
+            maxHeight: "90vh",
+            borderRadius: 1,
+          },
+        }}
       >
-        <DialogTitle>
+        <DialogTitle sx={{ pb: 1 }}>
           {editingProduct ? "Edit Product" : "Add New Product"}
         </DialogTitle>
-        <DialogContent dividers>
+        <DialogContent dividers sx={{ pt: 2 }}>
           <ProductForm product={editingProduct} onClose={handleFormClose} />
         </DialogContent>
       </Dialog>
 
       {/* Delete Confirmation */}
-      <Dialog open={!!deleteConfirmId} onClose={() => setDeleteConfirmId(null)}>
+      <Dialog
+        open={!!deleteConfirmId}
+        onClose={() => setDeleteConfirmId(null)}
+        PaperProps={{
+          sx: { borderRadius: 1 },
+        }}
+      >
         <DialogTitle>Delete Product</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -335,8 +415,10 @@ const Dashboard = () => {
             undone.
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteConfirmId(null)}>Cancel</Button>
+        <DialogActions sx={{ p: 2, gap: 1 }}>
+          <Button onClick={() => setDeleteConfirmId(null)} variant="outlined">
+            Cancel
+          </Button>
           <Button
             onClick={() => deleteConfirmId && handleDelete(deleteConfirmId)}
             color="error"
