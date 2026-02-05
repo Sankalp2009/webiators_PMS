@@ -47,19 +47,13 @@ const productSchema = new Schema(
     discountedPrice: {
       type: Number,
       min: [0, "Discounted price cannot be negative"],
-      validate: {
-        validator: function (value) {
-          return value < this.price;
-        },
-        message: "Discounted price must be less than the regular price",
-      },
     },
     description: {
       type: String,
       required: [true, "Please provide a description"],
       minlength: [10, "Description must be at least 10 characters"],
       maxlength: [5000, "Description cannot exceed 5000 characters"],
-      // Supports rich HTML content from CKEditor - automatically sanitized on server
+
     },
     isActive: {
       type: Boolean,
