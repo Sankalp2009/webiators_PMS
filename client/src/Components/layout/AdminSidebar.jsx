@@ -12,6 +12,7 @@ import {
   Avatar,
   IconButton,
 } from "@mui/material";
+import { GlobalInfo } from "../../Context/GlobalInfo.jsx";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -22,7 +23,6 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import HelpIcon from "@mui/icons-material/Help";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SecurityIcon from "@mui/icons-material/Security";
-import { GlobalInfo } from "../Context/GlobalInfo.jsx";
 
 const mainNavItems = [
   { title: "Dashboard", url: "/dashboard", icon: DashboardIcon },
