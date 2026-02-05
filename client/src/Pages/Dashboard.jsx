@@ -26,7 +26,7 @@ import {
   Avatar,
   CircularProgress,
 } from "@mui/material";
-import AdminSidebar from "../Components/layout/AdminSidebar.jsx";
+
 import ProductForm from "../Components/products/ProductForm.jsx";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";

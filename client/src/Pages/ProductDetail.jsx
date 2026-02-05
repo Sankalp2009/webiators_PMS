@@ -52,16 +52,16 @@ const ProductDetail = () => {
 
   if (loading) {
     return (
-      <Container maxWidth="lg" sx={{ py: 8, textAlign: "center" }}>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "90vh" }}>
         <CircularProgress />
-      </Container>
+      </Box>
     );
   }
 
   if (!product) {
     return (
-      <Container maxWidth="lg" sx={{ py: 8, textAlign: "center" }}>
-        <Typography variant="h4" fontWeight={700} gutterBottom>
+      <Box sx={{ textAlign: "center", py: 12 }}>
+        <Typography variant="h4" fontWeight={700} sx={{ mb: 3 }}>
           Product not found
         </Typography>
         <Button
@@ -69,10 +69,11 @@ const ProductDetail = () => {
           to="/"
           variant="contained"
           startIcon={<ArrowBackIcon />}
+          size="large"
         >
           Back to Products
         </Button>
-      </Container>
+      </Box>
     );
   }
 
@@ -90,147 +91,229 @@ const ProductDetail = () => {
   const images = product.galleryImages?.map(img => img.url) || [];
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      {/* Breadcrumb */}
-      <Breadcrumbs sx={{ mb: 4 }}>
-        <MuiLink
-          component={Link}
-          to="/"
-          underline="hover"
-          color="text.secondary"
-        >
-          Products
-        </MuiLink>
-        <Typography color="text.primary">{product.productName}</Typography>
-      </Breadcrumbs>
+    <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
+      {/* Header with Back Button */}
+      <Box sx={{ bgcolor: "background.paper", borderBottom: 1, borderColor: "divider" }}>
+        <Container maxWidth="lg" sx={{ py: 2 }}>
+          <Button
+            component={Link}
+            to="/"
+            startIcon={<ArrowBackIcon />}
+            sx={{ color: "text.secondary", textTransform: "none" }}
+          >
+            Back to Products
+          </Button>
+        </Container>
+      </Box>
 
-      <Grid container spacing={6}>
-        {/* Image Gallery */}
-        <Grid item xs={12} lg={6}>
-          <Box className="slide-up">
-            <ImageGallery images={images} productName={product.productName} />
-          </Box>
-        </Grid>
+      <Container maxWidth="lg" sx={{ py: 6 }}>
+        <Grid container spacing={8} alignItems="stretch">
+          {/* Image Gallery - Left Column */}
+          <Grid item xs={12} lg={5}>
+            <Box className="slide-up" sx={{ position: "sticky", top: 100 }}>
+              <ImageGallery images={images} productName={product.productName} />
+            </Box>
+          </Grid>
 
-        {/* Product Info */}
-        <Grid item xs={12} lg={6}>
-          <Box className="slide-up" sx={{ animationDelay: "0.1s" }}>
-            {/* Category Badge */}
-            <Chip label={product.category} size="small" sx={{ mb: 2 }} />
+          {/* Product Info - Right Column */}
+          <Grid item xs={12} lg={7}>
+            <Box className="slide-up" sx={{ animationDelay: "0.1s", display: "flex", flexDirection: "column", height: "100%" }}>
+              {/* Category Badge */}
+              <Chip 
+                label={product.category} 
+                size="small" 
+                sx={{ 
+                  mb: 3, 
+                  width: "fit-content",
+                  fontWeight: 600,
+                  fontSize: 11,
+                  letterSpacing: 0.5,
+                  textTransform: "uppercase",
+                }} 
+              />
 
-            {/* Title */}
-            <Typography variant="h3" fontWeight={700} sx={{ mb: 3 }}>
-              {product.productName}
-            </Typography>
-
-            {/* Price */}
-            <Box sx={{ mb: 3 }}>
-              <Box
-                sx={{ display: "flex", alignItems: "baseline", gap: 2, mb: 1 }}
+              {/* Title */}
+              <Typography 
+                variant="h2" 
+                fontWeight={700} 
+                sx={{ 
+                  mb: 4, 
+                  lineHeight: 1.2,
+                  letterSpacing: -0.5,
+                  fontSize: { xs: 32, lg: 42 }
+                }}
               >
-                {hasDiscount ? (
-                  <>
+                {product.productName}
+              </Typography>
+
+              {/* Price Section */}
+              <Box sx={{ mb: 5, pb: 4, borderBottom: 1, borderColor: "divider" }}>
+                <Box sx={{ display: "flex", alignItems: "baseline", gap: 3, mb: 2 }}>
+                  {hasDiscount ? (
+                    <>
+                      <Typography
+                        sx={{
+                          fontSize: 48,
+                          fontWeight: 700,
+                          color: "primary.main",
+                        }}
+                      >
+                        ${product.discountedPrice?.toFixed(2)}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: 24,
+                          color: "text.secondary",
+                          textDecoration: "line-through",
+                          fontWeight: 500,
+                        }}
+                      >
+                        ${product.price.toFixed(2)}
+                      </Typography>
+                      <Chip
+                        label={`Save $${savings.toFixed(2)}`}
+                        color="error"
+                        size="small"
+                        variant="filled"
+                        sx={{ fontWeight: 700, ml: 1 }}
+                      />
+                    </>
+                  ) : (
                     <Typography
-                      variant="h3"
-                      fontWeight={700}
-                      color="warning.main"
-                    >
-                      ${product.discountedPrice?.toFixed(2)}
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      color="text.secondary"
-                      sx={{ textDecoration: "line-through" }}
+                      sx={{
+                        fontSize: 48,
+                        fontWeight: 700,
+                      }}
                     >
                       ${product.price.toFixed(2)}
                     </Typography>
-                    <Chip
-                      label={`Save $${savings.toFixed(2)}`}
-                      color="warning"
-                      size="small"
-                    />
-                  </>
-                ) : (
-                  <Typography variant="h3" fontWeight={700}>
-                    ${product.price.toFixed(2)}
-                  </Typography>
-                )}
+                  )}
+                </Box>
+
+                {/* Stock Status */}
+                <Box sx={{ mt: 2 }}>
+                  {product.stock > 0 ? (
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                      <Box
+                        sx={{
+                          width: 10,
+                          height: 10,
+                          borderRadius: "50%",
+                          bgcolor: "success.main",
+                          boxShadow: "0 0 0 3px rgba(76, 175, 80, 0.1)",
+                        }}
+                      />
+                      <Typography
+                        variant="body2"
+                        color="success.main"
+                        fontWeight={600}
+                      >
+                        In Stock • {product.stock} available
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Typography variant="body2" color="error.main" fontWeight={600}>
+                      Out of Stock
+                    </Typography>
+                  )}
+                </Box>
               </Box>
 
-              {/* Stock Status */}
-              {product.stock > 0 ? (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Box
-                    sx={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: "50%",
-                      bgcolor: "success.main",
-                    }}
-                  />
-                  <Typography
-                    variant="body2"
-                    color="success.main"
-                    fontWeight={500}
-                  >
-                    In Stock ({product.stock} available)
-                  </Typography>
-                </Box>
-              ) : (
-                <Typography variant="body2" color="error.main" fontWeight={500}>
-                  Out of Stock
+              {/* Actions */}
+              <Box sx={{ display: "flex", gap: 2, mb: 6 }}>
+                <Button
+                  variant="contained"
+                  size="large"
+                  startIcon={<ShoppingCartIcon />}
+                  disabled={product.stock === 0}
+                  sx={{ 
+                    flex: 1, 
+                    py: 2,
+                    fontSize: 16,
+                    fontWeight: 600,
+                    textTransform: "none",
+                    borderRadius: 1,
+                  }}
+                >
+                  Add to Cart
+                </Button>
+                <Button 
+                  variant="outlined" 
+                  size="large" 
+                  sx={{ 
+                    px: 3,
+                    py: 2,
+                    borderRadius: 1,
+                  }}
+                >
+                  <FavoriteIcon sx={{ fontSize: 22 }} />
+                </Button>
+              </Box>
+
+              {/* Features */}
+              <Box sx={{ mb: 6, pb: 4, borderBottom: 1, borderColor: "divider" }}>
+                <List disablePadding>
+                  {features.map((feature, index) => (
+                    <ListItem 
+                      key={index} 
+                      sx={{ 
+                        px: 0, 
+                        py: 1.25,
+                        "&:not(:last-child)": {
+                          borderBottom: 1,
+                          borderColor: "divider",
+                        }
+                      }}
+                    >
+                      <ListItemIcon sx={{ minWidth: 48, color: "primary.main" }}>
+                        <feature.icon />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={feature.text}
+                        primaryTypographyProps={{
+                          color: "text.primary",
+                          variant: "body2",
+                          fontWeight: 500,
+                        }}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+
+              {/* Description */}
+              <Box>
+                <Typography 
+                  variant="h6" 
+                  fontWeight={700} 
+                  sx={{ mb: 2, fontSize: 16 }}
+                >
+                  About This Product
                 </Typography>
-              )}
+                <Box
+                  sx={{ 
+                    color: "text.secondary",
+                    lineHeight: 1.8,
+                    fontSize: 14,
+                    "& p": {
+                      mb: 1.5,
+                    },
+                    "& ul": {
+                      ml: 2,
+                      mb: 1.5,
+                    },
+                    "& li": {
+                      mb: 0.75,
+                    },
+                  }}
+                  dangerouslySetInnerHTML={{ __html: product.description }}
+                />
+              </Box>
             </Box>
-
-            {/* Actions */}
-            <Box sx={{ display: "flex", gap: 2, mb: 4 }}>
-              <Button
-                variant="contained"
-                size="large"
-                startIcon={<ShoppingCartIcon />}
-                disabled={product.stock === 0}
-                sx={{ flex: 1, py: 1.5 }}
-              >
-                Add to Cart
-              </Button>
-              <Button variant="outlined" size="large" sx={{ px: 2 }}>
-                <FavoriteIcon />
-              </Button>
-            </Box>
-
-            {/* Features */}
-            <Divider sx={{ mb: 3 }} />
-            <List disablePadding>
-              {features.map((feature, index) => (
-                <ListItem key={index} sx={{ px: 0, py: 0.5 }}>
-                  <ListItemIcon sx={{ minWidth: 40 }}>
-                    <feature.icon color="action" />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={feature.text}
-                    primaryTypographyProps={{
-                      color: "text.secondary",
-                      variant: "body2",
-                    }}
-                  />
-                </ListItem>
-              ))}
-            </List>
-
-            {/* Description */}
-            <Divider sx={{ my: 3 }} />
-            <Typography variant="h6" fontWeight={600} gutterBottom>
-              Description
-            </Typography>
-            <Box
-              sx={{ color: "text.secondary" }}
-              dangerouslySetInnerHTML={{ __html: product.description }}
-            />
-          </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </Box>
   );
 };
 
