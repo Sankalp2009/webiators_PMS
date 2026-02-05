@@ -22,7 +22,6 @@ const corsOptions = {
     const allowedOrigins = [
       "https://webiators-pms.vercel.app",
       "http://localhost:5173",
-      "http://localhost:3000",
     ];
 
     if (!origin || allowedOrigins.includes(origin)) {

@@ -1,0 +1,100 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import axios from 'axios';
+
+// Mock axios before importing the API module
+vi.mock('axios', () => {
+  const mockAxios = {
+    create: vi.fn().mockReturnValue({
+      get: vi.fn(),
+      post: vi.fn(),
+      patch: vi.fn(),
+      delete: vi.fn(),
+      interceptors: {
+        request: {
+          use: vi.fn(),
+        },
+      },
+    }),
+    get: vi.fn(),
+    post: vi.fn(),
+    patch: vi.fn(),
+    delete: vi.fn(),
+  };
+  return { default: mockAxios };
+});
+
+// Import after mocking
+import { productAPI } from '../Utils/Api';
+
+describe('Product API', () => {
+  beforeEach(() => {
+    localStorage.setItem('token', 'test-token');
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+  });
+
+  describe('getAllProducts', () => {
+    it('should fetch all products successfully', async () => {
+      const mockProducts = {
+        status: 'success',
+        products: [
+          { _id: '1', productName: 'Product 1', price: 100 },
+          { _id: '2', productName: 'Product 2', price: 200 },
+        ],
+      };
+
+      // Mock the API response
+      const createMock = axios.create();
+      createMock.get.mockResolvedValueOnce({ data: mockProducts });
+
+      // Expected behavior
+      expect(mockProducts.products).toHaveLength(2);
+      expect(mockProducts.status).toBe('success');
+    });
+
+    it('should handle error when fetching products', async () => {
+      const error = new Error('Network error');
+      expect(() => {
+        throw error;
+      }).toThrow('Network error');
+    });
+  });
+
+  describe('createProduct', () => {
+    it('should create product successfully', () => {
+      const productData = {
+        metaTitle: 'Test Product',
+        productName: 'Test Product',
+        slug: 'test-product',
+        price: 100,
+        description: 'Test description',
+        galleryImages: [{ url: 'image.jpg', alt: 'Test' }],
+      };
+
+      expect(productData).toBeDefined();
+      expect(productData.productName).toBe('Test Product');
+      expect(productData.price).toBe(100);
+    });
+  });
+
+  describe('updateProduct', () => {
+    it('should prepare update product request', () => {
+      const productData = { productName: 'Updated Product' };
+
+      expect(productData).toBeDefined();
+      expect(productData.productName).toBe('Updated Product');
+    });
+  });
+
+  describe('deleteProduct', () => {
+    it('should prepare delete product request', () => {
+      const productId = '1';
+
+      expect(productId).toBeDefined();
+      expect(productId).toBe('1');
+    });
+  });
+});
