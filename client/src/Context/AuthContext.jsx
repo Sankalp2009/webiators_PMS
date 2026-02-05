@@ -20,7 +20,7 @@ const AuthContext = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post("http://127.0.0.1:5000/api/v1/login", { email, password });
+      const response = await axios.post("https://webiators-pms.onrender.com/api/v1/users/login", { email, password });
       const { token, user } = response.data;
 
       localStorage.setItem("token", token);
@@ -42,7 +42,7 @@ const AuthContext = ({ children }) => {
 
   const signup = async (username, email, password) => {
     try {
-      const response = await axios.post("http://127.0.0.1:5000/api/v1/login/register", {
+      const response = await axios.post("https://webiators-pms.onrender.com/api/v1/users/register", {
         username,
         email,
         password,
