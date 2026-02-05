@@ -6,7 +6,8 @@ const slugSchema = Joi.string()
   .max(100)
   .messages({
     "string.empty": "URL slug is required",
-    "string.pattern.base": "Slug must be lowercase with hyphens only (e.g., product-name)",
+    "string.pattern.base":
+      "Slug must be lowercase with hyphens only (e.g., product-name)",
     "string.min": "Slug must be at least 3 characters",
     "string.max": "Slug cannot exceed 100 characters",
   });
@@ -51,7 +52,7 @@ const singleProductSchema = Joi.object({
         url: Joi.string().uri().required(),
         publicId: Joi.string().optional(),
         alt: Joi.string().max(200).optional(),
-      })
+      }),
     )
     .max(10)
     .optional()
@@ -67,7 +68,7 @@ const singleProductSchema = Joi.object({
 export const validateProduct = (req, res, next) => {
   // Check if it's an array (bulk) or single object
   const isBulk = Array.isArray(req.body);
-  
+
   let schema;
   if (isBulk) {
     // Bulk validation - array of products
@@ -81,7 +82,7 @@ export const validateProduct = (req, res, next) => {
   }
 
   const { error, value } = schema.validate(req.body);
-  
+
   if (error) {
     return res.status(400).json({
       status: "fail",
@@ -89,13 +90,21 @@ export const validateProduct = (req, res, next) => {
       field: error.details[0].path[0],
     });
   }
-  
+
   req.body = value;
   next();
 };
 
 // Product update validation (all fields optional)
 export const validateProductUpdate = (req, res, next) => {
+  // Ensure req.body is an object
+  if (!req.body || typeof req.body !== "object" || Array.isArray(req.body)) {
+    return res.status(400).json({
+      status: "fail",
+      message: "Request body must be a valid JSON object",
+    });
+  }
+
   const schema = Joi.object({
     metaTitle: Joi.string().min(3).max(60).optional(),
     productName: Joi.string().min(3).max(200).optional(),
@@ -109,7 +118,7 @@ export const validateProductUpdate = (req, res, next) => {
           url: Joi.string().uri().required(),
           publicId: Joi.string().optional(),
           alt: Joi.string().max(200).optional(),
-        })
+        }),
       )
       .max(10)
       .optional(),
@@ -121,7 +130,7 @@ export const validateProductUpdate = (req, res, next) => {
     .options({ stripUnknown: true });
 
   const { error, value } = schema.validate(req.body);
-  
+
   if (error) {
     return res.status(400).json({
       status: "fail",
@@ -129,7 +138,7 @@ export const validateProductUpdate = (req, res, next) => {
       field: error.details[0].path[0],
     });
   }
-  
+
   // Validate discountedPrice against price if both present
   if (value.discountedPrice !== undefined && value.price !== undefined) {
     if (value.discountedPrice >= value.price) {
@@ -139,7 +148,7 @@ export const validateProductUpdate = (req, res, next) => {
       });
     }
   }
-  
+
   req.body = value;
   next();
 };

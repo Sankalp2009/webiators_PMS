@@ -176,7 +176,7 @@ export const updateProduct = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
 
-    // Sanitize description if present
+   
     if (updates.description) {
       try {
         const { content, isValid, errors } = processRichText(
