@@ -47,7 +47,7 @@ Webiators is a comprehensive Product Management System featuring a React-based f
 
 ### Admin Features
 
-- Admin dashboard with analytics
+- Admin dashboard
 - Product CRUD operations (Create, Read, Update, Delete)
 - Bulk product upload support
 - Image gallery management
@@ -148,7 +148,7 @@ webiators/
    npm run dev        # Alternative dev command
    ```
 
-   Server runs on `http://localhost:5000`
+   Server runs on `http://127.0.0.1:5000` |  `https://webiators-pms.onrender.com`
 
 ### Frontend Setup
 
@@ -170,7 +170,7 @@ webiators/
    npm run dev
    ```
 
-   Frontend runs on `http://localhost:5173`
+   Frontend runs on `http://localhost:5173` | `https://webiators-pms.vercel.app`
 
 ## 📝 Available Scripts
 
@@ -227,13 +227,14 @@ Authorization: Bearer <jwt_token>
 ### Product Model
 
 - `_id` - MongoDB ObjectId
-- `title` - Product name
+- `metaTitle` - metaTitle
+- `productName` - Product name
 - `description` - Rich HTML description
 - `price` - Product price
-- `category` - Product category
-- `images` - Array of image URLs
-- `createdAt` - Creation date
-- `updatedAt` - Last update date
+- `slug` - Product slug
+- `discountedPrice` - Product discountedPrice
+- `galleryImages` - Array of galleryImages URLs
+- `isActive` - Boolean
 
 ## 🧪 Testing
 
@@ -277,7 +278,7 @@ npm run test:coverage # Coverage report
 ### Base URL
 
 ```
-http://localhost:5000/api/v1
+https://webiators-pms.onrender.com/api/v1
 ```
 
 ### Authentication Endpoints
@@ -336,16 +337,9 @@ http://localhost:5000/api/v1
 
 ### Backend Deployment
 
-- Deploy to platforms like Heroku, Railway, or AWS EC2
+- Deploy to Render
 - Set environment variables in hosting platform
 - Ensure MongoDB connection from server is allowed
-
-## 📖 Documentation
-
-For detailed information on specific features:
-
-- [Backend API Documentation](./server/README.md)
-- [Frontend Details](./client/README.md)
 
 ## 🤝 Contributing
 
@@ -357,34 +351,5 @@ For detailed information on specific features:
 ## 👤 Author
 
 Sankalp Patel
-
----
-
-## ❓ Troubleshooting
-
-### MongoDB Connection Issues
-
-- Verify MongoDB URI is correct
-- Check MongoDB Atlas IP whitelist includes your IP
-- Ensure `DATABASE_URI` is set in `config.env`
-
-### Token Expired
-
-- Clear cookies/localStorage
-- Login again to get a fresh token
-
-### CORS Errors
-
-- Check backend CORS configuration
-- Verify frontend URL is whitelisted
-- Ensure credentials are sent with requests
-
-### Port Already in Use
-
-- Frontend: Change in `vite.config.js`
-- Backend: Change `PORT` in `config.env`
-
-
----
 
 **Last Updated:** February 2026

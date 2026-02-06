@@ -13,14 +13,9 @@ function AllRoutes() {
   return (
   
       <Routes>
-        {/* Home Route */}
         <Route path="/" element={<Home />} />
-
-        {/* Auth Route Public*/}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Register />} />
-        
-        {/* Dashboard Route Protected */}
         <Route
           path="/dashboard"
           element={
@@ -29,8 +24,6 @@ function AllRoutes() {
             </PrivateRoute>
           }
         />
-        
-        {/* ProductDetail Route Protected */}
         <Route
           path="/product/:slug"
           element={
@@ -39,7 +32,6 @@ function AllRoutes() {
             </PrivateRoute>
           }
         />
-
         <Route path="*" element={<NotFound />} />
       </Routes>
   );

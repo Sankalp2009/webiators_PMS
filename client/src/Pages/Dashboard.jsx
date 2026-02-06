@@ -97,7 +97,6 @@ const Dashboard = () => {
       }}
     >
 
-      {/* Main Content */}
       <Box
         sx={{
           flex: 1,
@@ -106,7 +105,6 @@ const Dashboard = () => {
           overflow: "auto",
         }}
       >
-        {/* Header */}
         <AppBar
           position="sticky"
           elevation={0}
@@ -136,9 +134,7 @@ const Dashboard = () => {
           </Toolbar>
         </AppBar>
 
-        {/* Content */}
         <Box sx={{ p: 3, flex: 1, overflow: "auto" }}>
-          {/* Stats */}
           <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>
             Overview
           </Typography>
@@ -181,7 +177,6 @@ const Dashboard = () => {
             ))}
           </Grid>
 
-          {/* Table */}
           <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>
             Product Management
           </Typography>
@@ -367,7 +362,6 @@ const Dashboard = () => {
         </Box>
       </Box>
 
-      {/* Product Form Dialog */}
       <Dialog
         open={isFormOpen}
         onClose={handleFormClose}
@@ -388,7 +382,6 @@ const Dashboard = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation */}
       <Dialog
         open={!!deleteConfirmId}
         onClose={() => setDeleteConfirmId(null)}

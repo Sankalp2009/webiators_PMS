@@ -13,7 +13,6 @@ const Home = () => {
 
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Hero Section */}
       <Box
         sx={{
           position: "relative",

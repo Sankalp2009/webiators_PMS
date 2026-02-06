@@ -15,7 +15,6 @@ app.set("trust proxy", 1);
 
 app.use(compression());
 
-// FIXED: More flexible CORS configuration
 const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)

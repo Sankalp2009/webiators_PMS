@@ -1,14 +1,13 @@
 import Product from "../Model/productModel.js";
 import { processRichText } from "../Utils/sanitizer.js";
 
-// Get all products
+
 export const getAllProduct = async (req, res) => {
   try {
     const products = await Product.find()
       .sort({ createdAt: -1 })
       .populate("createdBy", "username email");
 
-    // FIXED: Consistent response structure and proper headers
     return res.status(200)
       .set('Cache-Control', 'no-cache, no-store, must-revalidate')
       .set('Pragma', 'no-cache')
@@ -27,7 +26,6 @@ export const getAllProduct = async (req, res) => {
   }
 };
 
-// Get product by ID
 export const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -44,14 +42,14 @@ export const getProductById = async (req, res) => {
       });
     }
 
-    // FIXED: Consistent response structure
+
     return res.status(200).json({
       status: "success",
-      data: product, // Changed from nested structure
+      data: product, 
     });
   } catch (error) {
     console.error("getProductById error:", error);
-    // Handle invalid ObjectId format
+    
     if (error.kind === "ObjectId") {
       return res.status(400).json({
         status: "fail",
@@ -65,7 +63,7 @@ export const getProductById = async (req, res) => {
   }
 };
 
-// Create product(s) - supports both single and bulk
+
 export const createProduct = async (req, res) => {
   try {
     let products = req.body;
@@ -75,7 +73,7 @@ export const createProduct = async (req, res) => {
       products = [products];
     }
 
-    // Add createdBy to all products from authenticated user
+ 
     const userId = req.user._id || req.user.id;
 
     products = products.map((product) => ({
@@ -83,11 +81,9 @@ export const createProduct = async (req, res) => {
       createdBy: userId,
     }));
 
-    // Sanitize descriptions in all products
+   
     products = products.map((product) => {
       if (product.description) {
-        // If you have a processRichText function, use it
-        // Otherwise, just use the description as-is
         try {
           const { content, isValid, errors } = processRichText(
             product.description,
@@ -102,14 +98,14 @@ export const createProduct = async (req, res) => {
             description: content,
           };
         } catch (err) {
-          // If processRichText doesn't exist, just use the description
+          
           return product;
         }
       }
       return product;
     });
 
-    // Check for duplicate slugs in the request
+  
     if (products.length > 1) {
       const slugs = products.map((p) => p.slug.toLowerCase().trim());
       const uniqueSlugs = new Set(slugs);
@@ -122,7 +118,7 @@ export const createProduct = async (req, res) => {
       }
     }
 
-    // Check if slugs already exist in database
+  
     const slugsToCheck = products.map((p) => p.slug.toLowerCase().trim());
     const existingSlugs = await Product.find({
       slug: { $in: slugsToCheck },
@@ -139,7 +135,7 @@ export const createProduct = async (req, res) => {
       });
     }
 
-    // Bulk insert
+    
     const newProducts = await Product.insertMany(products);
 
     return res.status(201).json({
@@ -150,7 +146,7 @@ export const createProduct = async (req, res) => {
   } catch (error) {
     console.error("createProduct error:", error);
 
-    // Handle duplicate key error
+    
     if (error.code === 11000) {
       return res.status(400).json({
         status: "fail",
@@ -158,7 +154,7 @@ export const createProduct = async (req, res) => {
       });
     }
 
-    // Handle validation errors
+   
     if (error.name === "ValidationError") {
       const errors = Object.values(error.errors).map((err) => err.message);
       return res.status(400).json({
@@ -168,7 +164,7 @@ export const createProduct = async (req, res) => {
       });
     }
 
-    // Handle rich text processing errors
+   
     if (error.message.includes("Invalid description")) {
       return res.status(400).json({
         status: "fail",
@@ -183,7 +179,7 @@ export const createProduct = async (req, res) => {
   }
 };
 
-// Update product
+
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -204,7 +200,7 @@ export const updateProduct = async (req, res) => {
 
         updates.description = content;
       } catch (err) {
-        // If processRichText doesn't exist, just use the description
+        
       }
     }
 
@@ -217,7 +213,7 @@ export const updateProduct = async (req, res) => {
       });
     }
 
-    // Check if user owns the product
+   
     const userId = req.user._id || req.user.id;
     if (product.createdBy.toString() !== userId.toString()) {
       return res.status(403).json({
@@ -226,7 +222,7 @@ export const updateProduct = async (req, res) => {
       });
     }
 
-    // Check if slug is being changed and if it already exists
+   
     if (updates.slug && updates.slug !== product.slug) {
       const existingProduct = await Product.findOne({
         slug: updates.slug,
@@ -254,7 +250,7 @@ export const updateProduct = async (req, res) => {
   } catch (error) {
     console.error("updateProduct error:", error);
 
-    // Handle invalid ObjectId format
+   
     if (error.kind === "ObjectId") {
       return res.status(400).json({
         status: "fail",
@@ -285,7 +281,7 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-// Delete product
+
 export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -299,7 +295,7 @@ export const deleteProduct = async (req, res) => {
       });
     }
 
-    // Check if user owns the product
+   
     const userId = req.user._id || req.user.id;
     if (product.createdBy.toString() !== userId.toString()) {
       return res.status(403).json({
@@ -310,7 +306,7 @@ export const deleteProduct = async (req, res) => {
 
     await Product.findByIdAndDelete(id);
 
-    // FIXED: Return 200 with data instead of 204
+   
     return res.status(200).json({
       status: "success",
       message: "Product deleted successfully",

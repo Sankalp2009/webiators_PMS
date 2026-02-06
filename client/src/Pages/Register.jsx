@@ -69,7 +69,6 @@
          }}
        >
          <Box className="fade-in" sx={{ width: '100%', maxWidth: 400 }}>
-           {/* Logo */}
            <Box sx={{ textAlign: 'center', mb: 4 }}>
              <Box
                component={Link}
@@ -101,7 +100,6 @@
              </Box>
            </Box>
  
-           {/* Header */}
            <Box sx={{ textAlign: 'center', mb: 4 }}>
              <Typography variant="h4" fontWeight={700} gutterBottom>
                Create your account
@@ -110,8 +108,7 @@
                Get started with your free account
              </Typography>
            </Box>
- 
-           {/* Form */}
+
            <Box component="form" onSubmit={handleSubmit}>
              <TextField
                fullWidth
@@ -176,8 +173,7 @@
                {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Create account'}
              </Button>
            </Box>
- 
-           {/* Terms */}
+
            <Typography sx={{ textAlign: 'center', mt: 3, fontSize: '0.75rem' }} color="text.secondary">
              By creating an account, you agree to our{' '}
              <MuiLink href="#" underline="hover">
@@ -188,8 +184,7 @@
                Privacy Policy
              </MuiLink>
            </Typography>
- 
-           {/* Login link */}
+
            <Typography sx={{ textAlign: 'center', mt: 2 }} color="text.secondary">
              Already have an account?{' '}
              <MuiLink component={Link} to="/login" underline="hover" fontWeight={500}>

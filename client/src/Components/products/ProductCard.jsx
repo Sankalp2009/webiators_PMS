@@ -15,7 +15,6 @@ const ProductCard = ({ product }) => {
     ? Math.round(((product.price - product.discountedPrice) / product.price) * 100)
     : 0;
 
-  // Get first image URL from galleryImages array
   const imageUrl = product.galleryImages?.[0]?.url || product.images?.[0] || '';
 
   return (
@@ -38,7 +37,6 @@ const ProductCard = ({ product }) => {
         },
       }}
     >
-      {/* Image Container */}
       <Box sx={{ position: 'relative', overflow: 'hidden' }}>
         <CardMedia
           component="img"
@@ -78,7 +76,6 @@ const ProductCard = ({ product }) => {
         )}
       </Box>
 
-      {/* Content */}
       <CardContent>
         <Typography
           variant="overline"

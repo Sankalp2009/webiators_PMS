@@ -60,7 +60,6 @@ const Login = () => {
       }}
     >
       <Box sx={{ width: "100%", maxWidth: 400 }}>
-        {/* Logo */}
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Box
             component={Link}
@@ -92,7 +91,6 @@ const Login = () => {
           </Box>
         </Box>
 
-        {/* Header */}
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <Typography variant="h4" fontWeight={700}>
             Welcome back
@@ -102,7 +100,6 @@ const Login = () => {
           </Typography>
         </Box>
 
-        {/* Form */}
         <Box component="form" onSubmit={handleSubmit}>
           <TextField
             fullWidth

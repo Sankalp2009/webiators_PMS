@@ -38,7 +38,6 @@ const Header = () => {
     <AppBar position="sticky" elevation={0}>
       <Container maxWidth="lg">
         <Toolbar disableGutters sx={{ height: 64 }}>
-          {/* Logo */}
           <Box
             component={Link}
             to="/"
@@ -73,7 +72,6 @@ const Header = () => {
             </Typography>
           </Box>
 
-          {/* Desktop Navigation */}
           <Box sx={{ display: { xs: "none", md: "flex" }, ml: 6, gap: 3 }}>
             {isAuth && (
               <Button
@@ -92,7 +90,6 @@ const Header = () => {
 
           <Box sx={{ flex: 1 }} />
 
-          {/* Desktop Actions */}
           <Box
             sx={{
               display: { xs: "none", md: "flex" },
@@ -133,7 +130,6 @@ const Header = () => {
             )}
           </Box>
 
-          {/* Mobile Menu Button */}
           <IconButton
             sx={{ display: { xs: "flex", md: "none" } }}
             onClick={() => setMobileMenuOpen(true)}
@@ -143,7 +139,6 @@ const Header = () => {
         </Toolbar>
       </Container>
 
-      {/* Mobile Drawer */}
       <Drawer
         anchor="right"
         open={mobileMenuOpen}

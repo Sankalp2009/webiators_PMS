@@ -20,15 +20,13 @@ export const ProductProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch all products
   const fetchProducts = async () => {
     try {
       setLoading(true);
       setError(null);
       const response = await productAPI.getAllProducts();
       console.log("Fetched products:", response);
-      
-      // FIXED: Handle the response structure correctly
+
       if (response.status === "success" && response.data) {
         setProducts(response.data);
       } else {
@@ -38,7 +36,7 @@ export const ProductProvider = ({ children }) => {
       const errorMessage = err.response?.data?.message || "Failed to fetch products";
       setError(errorMessage);
       console.error("Error fetching products:", err);
-      setProducts([]); // Reset to empty array on error
+      setProducts([]); 
     } finally {
       setLoading(false);
     }
@@ -59,7 +57,7 @@ export const ProductProvider = ({ children }) => {
   const getProductById = async (id) => {
     try {
       const response = await productAPI.getProductById(id);
-      // FIXED: Return data from response correctly
+
       return response.data;
     } catch (err) {
       console.error("Error fetching product:", err);
@@ -87,8 +85,7 @@ export const ProductProvider = ({ children }) => {
       };
 
       const response = await productAPI.createProduct(apiData);
-      
-      // Refresh products list after adding
+
       await fetchProducts();
       
       return response;
@@ -120,8 +117,7 @@ export const ProductProvider = ({ children }) => {
       };
 
       const response = await productAPI.updateProduct(id, apiData);
-      
-      // Refresh products list after updating
+
       await fetchProducts();
       
       return response;
@@ -137,17 +133,14 @@ export const ProductProvider = ({ children }) => {
   const deleteProduct = async (id) => {
     try {
       setError(null);
-      
-      // Optimistic update - remove from UI immediately
+
       setProducts((prevProducts) => prevProducts.filter((p) => p._id !== id));
 
-      // Delete from server
       await productAPI.deleteProduct(id);
     } catch (err) {
       const errorMessage = err.response?.data?.message || "Failed to delete product";
       setError(errorMessage);
-      
-      // Re-fetch on error to restore the deleted item
+
       await fetchProducts();
       throw err;
     }

@@ -64,7 +64,7 @@ const singleProductSchema = Joi.object({
 
 // Product creation validation - supports both single and bulk
 export const validateProduct = (req, res, next) => {
-  // Check if it's an array (bulk) or single object
+
   const isBulk = Array.isArray(req.body);
 
   let schema;
@@ -124,7 +124,7 @@ export const validateProductUpdate = (req, res, next) => {
     stock: Joi.number().min(0).integer().optional(),
     isActive: Joi.boolean().optional(),
   })
-    .min(1) // At least one field must be present
+    .min(1) 
     .options({ stripUnknown: true });
 
   const { error, value } = schema.validate(req.body);
@@ -137,7 +137,7 @@ export const validateProductUpdate = (req, res, next) => {
     });
   }
 
-  // Validate discountedPrice against price if both present
+
   if (value.discountedPrice !== undefined && value.price !== undefined) {
     if (value.discountedPrice >= value.price) {
       return res.status(400).json({

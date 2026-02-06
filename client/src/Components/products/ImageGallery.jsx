@@ -16,7 +16,6 @@
  
    return (
      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-       {/* Main Image */}
        <Box
          sx={{
            position: 'relative',
@@ -79,8 +78,7 @@
              </IconButton>
            </>
          )}
- 
-         {/* Image Counter */}
+
          {images.length > 1 && (
            <Chip
              label={`${selectedIndex + 1} / ${images.length}`}
@@ -96,8 +94,7 @@
            />
          )}
        </Box>
- 
-       {/* Thumbnail Gallery */}
+
        {images.length > 1 && (
          <Box sx={{ display: 'flex', gap: 1.5, overflowX: 'auto', pb: 1 }}>
            {images.map((image, index) => (

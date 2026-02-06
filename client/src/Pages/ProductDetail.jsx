@@ -47,11 +47,6 @@ const ProductDetail = () => {
     loadProduct();
   }, [slug, getProductBySlug]);
 
-  // Version check - helps verify deployment
-  useEffect(() => {
-    console.log("✓ ProductDetail v3.0 - Two Column Layout (5:7 ratio)");
-  }, []);
-
   if (loading) {
     return (
       <Box
@@ -100,7 +95,6 @@ const ProductDetail = () => {
 
   return (
     <Box sx={{ bgcolor: "background.default", minHeight: "100vh" }}>
-      {/* Sticky Header */}
       <Box
         sx={{
           bgcolor: "background.paper",
@@ -128,12 +122,10 @@ const ProductDetail = () => {
         </Container>
       </Box>
 
-      {/* Main Content - Two Column Layout */}
       <Container maxWidth="xl" sx={{ py: { xs: 4, md: 6 } }}>
-        {/* Grid Container: 5:7 Ratio */}
+
         <Grid container spacing={{ xs: 4, md: 6 }}>
-          
-          {/* LEFT COLUMN - Image Gallery (5/12 = 41.67% width) */}
+
           <Grid item xs={12} md={5}>
             <Box
               sx={{
@@ -149,11 +141,9 @@ const ProductDetail = () => {
             </Box>
           </Grid>
 
-          {/* RIGHT COLUMN - Product Info (7/12 = 58.33% width) */}
           <Grid item xs={12} md={7}>
             <Box sx={{ pl: { md: 4 } }}>
-              
-              {/* Category */}
+
               <Chip
                 label={product.category || "Product"}
                 size="small"
@@ -167,7 +157,6 @@ const ProductDetail = () => {
                 }}
               />
 
-              {/* Title */}
               <Typography
                 variant="h1"
                 sx={{
@@ -181,7 +170,6 @@ const ProductDetail = () => {
                 {product.productName}
               </Typography>
 
-              {/* Price Card */}
               <Paper
                 elevation={0}
                 sx={{
@@ -239,7 +227,6 @@ const ProductDetail = () => {
                   )}
                 </Box>
 
-                {/* Stock Indicator */}
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                   <Box
                     sx={{
@@ -267,7 +254,6 @@ const ProductDetail = () => {
                 </Box>
               </Paper>
 
-              {/* Buttons */}
               <Box
                 sx={{
                   display: "flex",
@@ -306,7 +292,6 @@ const ProductDetail = () => {
                 </Button>
               </Box>
 
-              {/* Features */}
               <Paper
                 elevation={0}
                 sx={{
@@ -344,7 +329,6 @@ const ProductDetail = () => {
                 </List>
               </Paper>
 
-              {/* Description */}
               <Box>
                 <Typography
                   variant="h6"

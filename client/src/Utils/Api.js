@@ -2,16 +2,14 @@ import axios from "axios";
 
 const API_BASE_URL = "https://webiators-pms.onrender.com";
 
-// Create axios instance with default config
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // Important for CORS with credentials
+  withCredentials: true,
 });
 
-// FIXED: Add token to requests dynamically (not at initialization)
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -25,7 +23,6 @@ api.interceptors.request.use(
   }
 );
 
-// Add response interceptor for better error handling
 api.interceptors.response.use(
   (response) => {
     return response;

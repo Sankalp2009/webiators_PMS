@@ -159,7 +159,6 @@ const ProductForm = ({ product, onClose }) => {
 
   return (
     <Box component="form" onSubmit={handleSubmit}>
-      {/* Meta Title */}
       <TextField
         fullWidth
         label="Meta Title *"
@@ -176,8 +175,6 @@ const ProductForm = ({ product, onClose }) => {
         margin="normal"
         disabled={loading}
       />
-
-      {/* Product Name */}
       <TextField
         fullWidth
         label="Product Name *"
@@ -192,7 +189,6 @@ const ProductForm = ({ product, onClose }) => {
         disabled={loading}
       />
 
-      {/* URL Slug */}
       <TextField
         fullWidth
         label="URL Slug *"
@@ -207,7 +203,6 @@ const ProductForm = ({ product, onClose }) => {
         disabled={loading}
       />
 
-      {/* Images */}
       <Box sx={{ mt: 2, mb: 2 }}>
         <Typography variant="body2" color="text.secondary" gutterBottom>
           Gallery Images *
@@ -250,7 +245,6 @@ const ProductForm = ({ product, onClose }) => {
         )}
       </Box>
 
-      {/* Price and Discounted Price */}
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <TextField
@@ -291,7 +285,6 @@ const ProductForm = ({ product, onClose }) => {
         </Grid>
       </Grid>
 
-      {/* Description */}
       <TextField
         fullWidth
         label="Description *"
@@ -310,7 +303,6 @@ const ProductForm = ({ product, onClose }) => {
         disabled={loading}
       />
 
-      {/* Actions */}
       <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
         <Button
           type="submit"
