@@ -39,10 +39,8 @@ Webiators is a comprehensive Product Management System featuring a React-based f
 ### User Features
 
 - User registration and login authentication
-- Product catalog browsing with search and filtering
 - Product detail view with image gallery
 - Rich product descriptions with HTML content support
-- Shopping cart functionality
 - Protected user routes
 
 ### Admin Features
@@ -52,7 +50,6 @@ Webiators is a comprehensive Product Management System featuring a React-based f
 - Bulk product upload support
 - Image gallery management
 - User management
-- Protected admin routes with role-based access
 
 ### Security
 
@@ -283,18 +280,16 @@ https://webiators-pms.onrender.com/api/v1
 
 ### Authentication Endpoints
 
-- `POST /auth/register` - Register new user
-- `POST /auth/login` - Login user
-- `POST /auth/logout` - Logout user
+- `POST /user/register` - Register new user
+- `POST /user/login` - Login user
 
 ### Product Endpoints
 
-- `GET /products` - Get all products
-- `GET /products/:id` - Get product details
+- `GET /products` - Get all products(authenticated)
+- `GET /products/:id` - Get product details(authenticated)
 - `POST /products` - Create product (authenticated)
-- `PUT /products/:id` - Update product (owner only)
-- `DELETE /products/:id` - Delete product (owner only)
-- `POST /products/bulk` - Bulk create products (admin)
+- `PUT /products/:id` - Update product(authenticated)
+- `DELETE /products/:id` - Delete product(authenticated)
 
 ## 🔒 Security Features
 
@@ -307,7 +302,6 @@ https://webiators-pms.onrender.com/api/v1
 - Security headers (Helmet.js)  
 - HTTP Parameter Pollution protection  
 - Protected API routes  
-- Role-based access control
 
 ## 📦 Dependencies
 
